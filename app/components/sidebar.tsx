@@ -22,7 +22,7 @@ export default function SidebarDemo() {
     },
     {
       label: "Add Resource",
-      href: "/addresource",
+      href: "/resources",
       icon: <IconPill className="h-5 w-5" />,
     },
     {
