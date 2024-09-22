@@ -155,21 +155,26 @@ export const MobileSidebar = ({
   );
 };
 
+
 export const SidebarLink = ({
   link,
   className,
+  onClick, // Add onClick prop
   ...props
 }: {
   link: Links;
   className?: string;
+  onClick?: () => void; // Define the onClick prop type
   props?: LinkProps;
 }) => {
   const { open, animate } = useSidebar();
+
   return (
     <Link
       href={link.href}
+      onClick={onClick} // Call onClick when the link is clicked
       className={cn(
-        "flex items-center justify-start gap-2  group/sidebar py-2",
+        "flex items-center justify-start gap-2 group/sidebar py-2",
         className
       )}
       {...props}
