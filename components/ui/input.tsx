@@ -1,13 +1,7 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 
-// tslint:disable-next-line
-export interface InputProps
-  extends React.InputHTMLAttributes<HTMLInputElement> {
-  // This interface extends the default InputHTMLAttributes and can be used for future customization
-}
-
-const Input = React.forwardRef<HTMLInputElement, InputProps>(
+const Input = React.forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLInputElement>>(
   ({ className, type, ...props }, ref) => {
     return (
       <input
