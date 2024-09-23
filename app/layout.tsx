@@ -7,14 +7,13 @@ import Footer from "./components/footer";
 import "./globals.css";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
     <html lang="en">
       <body className="flex flex-col h-screen">
         <Headbar/>
         <div className="flex flex-1">
-          <SidebarDemo open={sidebarOpen} setOpen={setSidebarOpen} />
+          <SidebarDemo />
           <div className="flex-1 flex flex-col overflow-y-auto">
             <div className="flex-1 min-h-screen">{children}</div>
             <Footer />
