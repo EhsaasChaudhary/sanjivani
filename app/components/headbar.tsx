@@ -38,7 +38,7 @@ export function Headbar() {
             className="font-medium text-black dark:text-white whitespace-pre"
           ></motion.span>
         </div>
-        <span>Sanjivani</span>
+        <span>Sanjivani Care</span>
       </Link>
 
       {/* Center: Menubar */}
