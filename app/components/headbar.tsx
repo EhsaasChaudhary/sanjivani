@@ -15,13 +15,6 @@ import {
   Menubar,
   MenubarMenu,
   MenubarTrigger,
-  MenubarContent,
-  MenubarItem,
-  MenubarSeparator,
-  MenubarShortcut,
-  MenubarSub,
-  MenubarSubTrigger,
-  MenubarSubContent,
 } from "@/components/ui/menubar";
 import { motion } from "framer-motion";
 
