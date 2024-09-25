@@ -1,7 +1,8 @@
-import Image from "next/image";
-import { MoreHorizontal } from "lucide-react";
+'use client';
 
-import { Badge } from "@/components/ui/badge";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -29,104 +30,109 @@ import { Tabs, TabsContent } from "@/components/ui/tabs";
 import React from "react";
 
 // Sample JSON data
-const data = [
+const medicineData = [
   {
-    id: 1,
-    name: "Laser Lemonade Machine",
-    status: "Draft",
-    price: "$499.99",
-    totalSales: 25,
-    createdAt: "2023-07-12 10:42 AM",
+    resourcesId: 1,
+    Name: "Paracetamol",
+    Company: "HealthPlus Pharmaceuticals",
+    Usage: "Pain Relief, Fever Reduction",
+    Description: "Used to treat mild to moderate pain and reduce fever.",
+    Quantity: 100,
     imageUrl:
       "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/BigBuckBunny.jpg",
   },
   {
-    id: 2,
-    name: "Super Soda Dispenser",
-    status: "Published",
-    price: "$299.99",
-    totalSales: 40,
-    createdAt: "2023-06-10 11:20 AM",
+    resourcesId: 2,
+    Name: "Amoxicillin",
+    Company: "BioCare Labs",
+    Usage: "Bacterial Infections",
+    Description: "An antibiotic used to treat various bacterial infections.",
+    Quantity: 50,
     imageUrl:
       "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/ElephantsDream.jpg",
   },
   {
-    id: 3,
-    name: "High-Speed Blender",
-    status: "Published",
-    price: "$199.99",
-    totalSales: 70,
-    createdAt: "2023-05-05 09:15 AM",
+    resourcesId: 3,
+    Name: "Aspirin",
+    Company: "GlobalMeds Ltd",
+    Usage: "Pain Relief, Anti-Inflammatory",
+    Description: "Reduces pain, inflammation, and helps prevent blood clots.",
+    Quantity: 200,
     imageUrl:
       "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/ForBiggerBlazes.jpg",
   },
   {
-    id: 4,
-    name: "Automatic Coffee Brewer",
-    status: "Draft",
-    price: "$249.99",
-    totalSales: 35,
-    createdAt: "2023-07-19 02:30 PM",
+    resourcesId: 4,
+    Name: "Ibuprofen",
+    Company: "Medico Health",
+    Usage: "Pain Relief, Inflammation Reduction",
+    Description: "Used to reduce fever and treat pain or inflammation.",
+    Quantity: 150,
     imageUrl:
       "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/ForBiggerEscapes.jpg",
   },
   {
-    id: 5,
-    name: "Ice Cream Maker",
-    status: "Published",
-    price: "$129.99",
-    totalSales: 90,
-    createdAt: "2023-03-22 10:00 AM",
+    resourcesId: 5,
+    Name: "Cetirizine",
+    Company: "AllergyCare Pharma",
+    Usage: "Allergy Relief",
+    Description:
+      "Antihistamine for treating allergy symptoms like itching and runny nose.",
+    Quantity: 120,
     imageUrl:
       "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/ForBiggerFun.jpg",
   },
   {
-    id: 6,
-    name: "Popcorn Popper",
-    status: "Draft",
-    price: "$89.99",
-    totalSales: 50,
-    createdAt: "2023-08-01 08:45 AM",
+    resourcesId: 6,
+    Name: "Omeprazole",
+    Company: "StomachGuard Labs",
+    Usage: "Acid Reflux, Ulcers",
+    Description:
+      "Treats heartburn, stomach ulcers, and acid reflux by reducing stomach acid.",
+    Quantity: 90,
     imageUrl:
       "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/ForBiggerJoyrides.jpg",
   },
   {
-    id: 7,
-    name: "Hot Dog Roller",
-    status: "Published",
-    price: "$149.99",
-    totalSales: 60,
-    createdAt: "2023-04-14 12:10 PM",
+    resourcesId: 7,
+    Name: "Metformin",
+    Company: "GlucoseMeds Inc.",
+    Usage: "Diabetes Management",
+    Description:
+      "Used to control high blood sugar in people with type 2 diabetes.",
+    Quantity: 300,
     imageUrl:
       "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/ForBiggerMeltdowns.jpg",
   },
   {
-    id: 8,
-    name: "Electric Pizza Oven",
-    status: "Published",
-    price: "$349.99",
-    totalSales: 85,
-    createdAt: "2023-06-18 01:30 PM",
+    resourcesId: 8,
+    Name: "Atorvastatin",
+    Company: "HeartCare Solutions",
+    Usage: "Cholesterol Management",
+    Description:
+      "Helps lower bad cholesterol and fats, reducing the risk of heart disease.",
+    Quantity: 80,
     imageUrl:
       "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/Sintel.jpg",
   },
   {
-    id: 9,
-    name: "Smoothie Maker",
-    status: "Draft",
-    price: "$159.99",
-    totalSales: 45,
-    createdAt: "2023-05-25 03:00 PM",
+    resourcesId: 9,
+    Name: "Salbutamol",
+    Company: "Respira Pharmaceuticals",
+    Usage: "Asthma, Respiratory Issues",
+    Description:
+      "A bronchodilator that helps open up the airways in lungs, used for asthma.",
+    Quantity: 60,
     imageUrl:
       "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/SubaruOutbackOnStreetAndDirt.jpg",
   },
   {
-    id: 10,
-    name: "Frozen Yogurt Machine",
-    status: "Published",
-    price: "$189.99",
-    totalSales: 100,
-    createdAt: "2023-07-05 04:15 PM",
+    resourcesId: 10,
+    Name: "Lisinopril",
+    Company: "CardioCare Pharma",
+    Usage: "Blood Pressure Control",
+    Description: "Used to treat high blood pressure and heart failure.",
+    Quantity: 130,
     imageUrl:
       "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/TearsOfSteel.jpg",
   },
@@ -246,67 +252,85 @@ export default function Datatable() {
                       <span className="sr-only">Image</span>
                     </TableHead>
                     <TableHead>Name</TableHead>
-                    <TableHead>Status</TableHead>
+                    <TableHead>Company</TableHead>
                     <TableHead className="hidden md:table-cell">
-                      Price
+                      Usage
                     </TableHead>
                     <TableHead className="hidden md:table-cell">
-                      Total Sales
+                      Quantity
                     </TableHead>
                     <TableHead className="hidden md:table-cell">
-                      Created at
+                      Description
                     </TableHead>
                     <TableHead>
                       <span className="sr-only">Actions</span>
                     </TableHead>
                   </TableRow>
                 </TableHeader>
+
                 <TableBody>
-                  {data.map((item) => (
-                    <TableRow key={item.id}>
-                      <TableCell className="hidden sm:table-cell">
-                        <Image
-                          alt={item.name} // Use the item name as alt text for better accessibility
-                          className="aspect-square rounded-md object-cover"
-                          height={64}
-                          src={item.imageUrl} // Use imageUrl from the dataset
-                          width={64}
-                        />
-                      </TableCell>
-                      <TableCell className="font-medium">{item.name}</TableCell>
-                      <TableCell>
-                        <Badge variant="outline">{item.status}</Badge>
-                      </TableCell>
-                      <TableCell className="hidden md:table-cell">
-                        {item.price}
-                      </TableCell>
-                      <TableCell className="hidden md:table-cell">
-                        {item.totalSales}
-                      </TableCell>
-                      <TableCell className="hidden md:table-cell">
-                        {item.createdAt}
-                      </TableCell>
-                      <TableCell>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button
-                              aria-haspopup="true"
-                              size="icon"
-                              variant="ghost"
-                            >
-                              <MoreHorizontal className="h-4 w-4" />
-                              <span className="sr-only">Toggle menu</span>
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                            <DropdownMenuItem>Edit</DropdownMenuItem>
-                            <DropdownMenuItem>Delete</DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                  {medicineData.map((item) => {
+                    const router = useRouter();
+
+                    const handleEditClick = (id: number): void => {
+                      router.push(`/resources/${id}`); // Navigate to dynamic route with resourcesId
+                    };
+                    
+
+                    return (
+                      <TableRow key={item.resourcesId}>
+                        <TableCell className="hidden sm:table-cell">
+                          <Image
+                            alt={item.Name}
+                            className="aspect-square rounded-md object-cover"
+                            height={64}
+                            src={item.imageUrl}
+                            width={64}
+                          />
+                        </TableCell>
+                        <TableCell className="font-medium">
+                          {item.Name}
+                        </TableCell>
+                        <TableCell className="hidden md:table-cell">
+                          {item.Company}
+                        </TableCell>
+                        <TableCell className="hidden md:table-cell">
+                          {item.Usage}
+                        </TableCell>
+                        <TableCell className="hidden md:table-cell">
+                          {item.Quantity}
+                        </TableCell>
+                        <TableCell className="hidden md:table-cell">
+                          {item.Description}
+                        </TableCell>
+                        <TableCell>
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button
+                                aria-haspopup="true"
+                                size="icon"
+                                variant="ghost"
+                              >
+                                <MoreHorizontal className="h-4 w-4" />
+                                <span className="sr-only">Toggle menu</span>
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                              <DropdownMenuItem
+                                onClick={() =>
+                                  handleEditClick(item.resourcesId)
+                                }
+                              >
+                                Edit
+                              </DropdownMenuItem>
+                              <DropdownMenuItem>Delete</DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
                 </TableBody>
               </Table>
             </CardContent>
