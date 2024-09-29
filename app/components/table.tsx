@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { MoreHorizontal } from "lucide-react";
+import { MoreHorizontal, AlertTriangle, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -34,10 +34,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { AlertTriangle, CheckCircle } from "lucide-react";
-
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import React, { useEffect, useState } from "react";
+
 interface Medicine {
   Id: string;
   Name: string;
@@ -50,11 +49,14 @@ interface Medicine {
 
 export default function Datatable() {
   const [medicineData, setMedicineData] = useState<Medicine[]>([]);
+  const [filteredData, setFilteredData] = useState<Medicine[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [successDialogOpen, setSuccessDialogOpen] = useState(false);
   const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
+  const [searchInput, setSearchInput] = useState<string>("");
+
   const router = useRouter();
 
   useEffect(() => {
@@ -68,6 +70,7 @@ export default function Datatable() {
         }
         const data = await response.json();
         setMedicineData(data);
+        setFilteredData(data); // Initialize filtered data
         setLoading(false);
       } catch (err) {
         setError((err as Error).message);
@@ -77,6 +80,19 @@ export default function Datatable() {
 
     fetchData();
   }, []);
+
+  // Handle the search functionality
+  useEffect(() => {
+    const filtered = medicineData.filter((item) =>
+      item.Name.toUpperCase().startsWith(searchInput.toUpperCase())
+    );
+    setFilteredData(filtered);
+  }, [searchInput, medicineData]);
+  
+
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchInput(event.target.value);
+  };
 
   const handleDeleteClick = (id: string) => {
     setSelectedItemId(id); // Set the item to be deleted
@@ -129,7 +145,7 @@ export default function Datatable() {
       <Tabs defaultValue="all" className="w-full">
         <TabsContent value="all">
           <Card className="h-full">
-            <CardHeader className="flex flex-row justify-between items-center">
+            <CardHeader className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
               {/* Title and Description */}
               <div>
                 <CardTitle>Resources</CardTitle>
@@ -137,36 +153,36 @@ export default function Datatable() {
               </div>
 
               {/* Searchbar and Add New Item Button */}
-              <div className="relative flex items-center gap-2">
-                <div className="relative">
-                  <button
-                    className="btn btn-outline btn-sm flex items-center justify-between rounded-l-md border border-input bg-muted/40 px-3 py-2 text-sm font-semibold text-foreground shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-muted-foreground"
-                    type="button"
-                    onClick={() => router.push(`/resources/new`)}
+              <div className="relative flex items-center gap-2 mt-2 sm:mt-0">
+                <button
+                  className="btn btn-outline btn-sm flex items-center justify-between rounded-l-md border border-input bg-muted/40 px-3 py-2 text-sm font-semibold text-foreground shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-muted-foreground"
+                  type="button"
+                  onClick={() => router.push(`/resources/new`)}
+                >
+                  Add New Item
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="ml-1 h-4 w-4"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
                   >
-                    Add New Item
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="ml-1 h-4 w-4"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  </button>
-                </div>
+                    <path
+                      fillRule="evenodd"
+                      d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </button>
 
                 {/* Search input */}
                 <div className="relative">
                   <input
                     type="text"
                     className="w-50 rounded-r-md border border-input bg-background pl-3 pr-10 py-2 text-sm shadow-sm focus:border-accent focus:ring-2 focus:ring-accent"
-                    placeholder="Search..."
+                    placeholder="Search by Name..."
                     aria-label="Search input"
+                    value={searchInput}
+                    onChange={handleSearchChange}
                   />
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -207,7 +223,7 @@ export default function Datatable() {
                 </TableHeader>
 
                 <TableBody>
-                  {medicineData.map((item) => (
+                  {filteredData.map((item) => (
                     <TableRow key={item.Id}>
                       <TableCell>
                         <Image
