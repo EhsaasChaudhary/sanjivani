@@ -80,7 +80,7 @@ const MedicineForm = ({ params }: { params: { resourcesId: string } }) => {
     } else {
       setLoading(false);
     }
-  }, [resourcesId]);
+  }, [resourcesId, form]);
 
   const handleSubmit = async (data: z.infer<typeof MedicineSchema>) => {
     try {
