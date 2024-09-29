@@ -27,118 +27,60 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
-// Sample JSON data
-const medicineData = [
-  {
-    resourcesId: 1,
-    Name: "Paracetamol",
-    Company: "HealthPlus Pharmaceuticals",
-    Usage: "Pain Relief, Fever Reduction",
-    Description: "Used to treat mild to moderate pain and reduce fever.",
-    Quantity: 100,
-    imageUrl:
-      "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/BigBuckBunny.jpg",
-  },
-  {
-    resourcesId: 2,
-    Name: "Amoxicillin",
-    Company: "BioCare Labs",
-    Usage: "Bacterial Infections",
-    Description: "An antibiotic used to treat various bacterial infections.",
-    Quantity: 50,
-    imageUrl:
-      "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/ElephantsDream.jpg",
-  },
-  {
-    resourcesId: 3,
-    Name: "Aspirin",
-    Company: "GlobalMeds Ltd",
-    Usage: "Pain Relief, Anti-Inflammatory",
-    Description: "Reduces pain, inflammation, and helps prevent blood clots.",
-    Quantity: 200,
-    imageUrl:
-      "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/ForBiggerBlazes.jpg",
-  },
-  {
-    resourcesId: 4,
-    Name: "Ibuprofen",
-    Company: "Medico Health",
-    Usage: "Pain Relief, Inflammation Reduction",
-    Description: "Used to reduce fever and treat pain or inflammation.",
-    Quantity: 150,
-    imageUrl:
-      "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/ForBiggerEscapes.jpg",
-  },
-  {
-    resourcesId: 5,
-    Name: "Cetirizine",
-    Company: "AllergyCare Pharma",
-    Usage: "Allergy Relief",
-    Description:
-      "Antihistamine for treating allergy symptoms like itching and runny nose.",
-    Quantity: 120,
-    imageUrl:
-      "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/ForBiggerFun.jpg",
-  },
-  {
-    resourcesId: 6,
-    Name: "Omeprazole",
-    Company: "StomachGuard Labs",
-    Usage: "Acid Reflux, Ulcers",
-    Description:
-      "Treats heartburn, stomach ulcers, and acid reflux by reducing stomach acid.",
-    Quantity: 90,
-    imageUrl:
-      "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/ForBiggerJoyrides.jpg",
-  },
-  {
-    resourcesId: 7,
-    Name: "Metformin",
-    Company: "GlucoseMeds Inc.",
-    Usage: "Diabetes Management",
-    Description:
-      "Used to control high blood sugar in people with type 2 diabetes.",
-    Quantity: 300,
-    imageUrl:
-      "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/ForBiggerMeltdowns.jpg",
-  },
-  {
-    resourcesId: 8,
-    Name: "Atorvastatin",
-    Company: "HeartCare Solutions",
-    Usage: "Cholesterol Management",
-    Description:
-      "Helps lower bad cholesterol and fats, reducing the risk of heart disease.",
-    Quantity: 80,
-    imageUrl:
-      "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/Sintel.jpg",
-  },
-  {
-    resourcesId: 9,
-    Name: "Salbutamol",
-    Company: "Respira Pharmaceuticals",
-    Usage: "Asthma, Respiratory Issues",
-    Description:
-      "A bronchodilator that helps open up the airways in lungs, used for asthma.",
-    Quantity: 60,
-    imageUrl:
-      "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/SubaruOutbackOnStreetAndDirt.jpg",
-  },
-  {
-    resourcesId: 10,
-    Name: "Lisinopril",
-    Company: "CardioCare Pharma",
-    Usage: "Blood Pressure Control",
-    Description: "Used to treat high blood pressure and heart failure.",
-    Quantity: 130,
-    imageUrl:
-      "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/TearsOfSteel.jpg",
-  },
-];
+// Interface for Medicine Data
+interface Medicine {
+  Id: string; // Update to match the API response
+  Name: string;
+  Company: string;
+  Usage: string;
+  Description: string;
+  Quantity: number;
+  imageUrl: string;
+}
 
 export default function Datatable() {
+  const [medicineData, setMedicineData] = useState<Medicine[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    // Fetch data from API
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          "https://64145d0d36020cecfda67863.mockapi.io/Medicines"
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch data");
+        }
+        const data = await response.json();
+        setMedicineData(data);
+        setLoading(false);
+      } catch (err) {
+        setError((err as Error).message);
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const handleEditClick = (id: string): void => {
+    console.log("Navigating to edit page with ID:", id); // Log the ID for debugging
+    router.push(`/resources/${id}`); // Navigate to dynamic route with Id
+  };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
   return (
     <div className="flex ml-2 mr-2 mb-2 h-full">
       <Tabs defaultValue="all" className="w-full">
@@ -155,7 +97,6 @@ export default function Datatable() {
               <div className="relative flex items-center gap-2">
                 {/* Dropdown button connected to the search bar */}
                 <div className="relative">
-                  {/* Dropdown toggle button */}
                   <button
                     className="peer btn btn-outline btn-sm flex items-center justify-between rounded-l-md border border-input bg-muted/40 px-3 py-2 text-sm font-semibold text-foreground shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-muted-foreground"
                     type="button"
@@ -163,7 +104,6 @@ export default function Datatable() {
                     aria-expanded="false"
                   >
                     Dropdown
-                    {/* Dropdown icon */}
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       className="ml-1 h-4 w-4"
@@ -177,8 +117,6 @@ export default function Datatable() {
                       />
                     </svg>
                   </button>
-
-                  {/* Dropdown menu */}
                   <div className="invisible absolute left-0 z-10 mt-2 w-48 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 peer-focus:visible peer-focus:opacity-100 focus-within:visible peer-focus-within:block">
                     <a
                       className="dropdown-item block px-4 py-2 text-sm text-muted-foreground hover:bg-muted/40"
@@ -219,7 +157,6 @@ export default function Datatable() {
                     placeholder="Search..."
                     aria-label="Search input with dropdown"
                   />
-                  {/* Search icon inside input */}
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
@@ -253,15 +190,9 @@ export default function Datatable() {
                     </TableHead>
                     <TableHead>Name</TableHead>
                     <TableHead>Company</TableHead>
-                    <TableHead className="hidden md:table-cell">
-                      Usage
-                    </TableHead>
-                    <TableHead className="hidden md:table-cell">
-                      Quantity
-                    </TableHead>
-                    <TableHead className="hidden md:table-cell">
-                      Description
-                    </TableHead>
+                    <TableHead className="hidden md:table-cell">Usage</TableHead>
+                    <TableHead className="hidden md:table-cell">Quantity</TableHead>
+                    <TableHead className="hidden md:table-cell">Description</TableHead>
                     <TableHead>
                       <span className="sr-only">Actions</span>
                     </TableHead>
@@ -269,68 +200,41 @@ export default function Datatable() {
                 </TableHeader>
 
                 <TableBody>
-                  {medicineData.map((item) => {
-                    const router = useRouter();
-
-                    const handleEditClick = (id: number): void => {
-                      router.push(`/resources/${id}`); // Navigate to dynamic route with resourcesId
-                    };
-                    
-
-                    return (
-                      <TableRow key={item.resourcesId}>
-                        <TableCell className="hidden sm:table-cell">
-                          <Image
-                            alt={item.Name}
-                            className="aspect-square rounded-md object-cover"
-                            height={64}
-                            src={item.imageUrl}
-                            width={64}
-                          />
-                        </TableCell>
-                        <TableCell className="font-medium">
-                          {item.Name}
-                        </TableCell>
-                        <TableCell className="hidden md:table-cell">
-                          {item.Company}
-                        </TableCell>
-                        <TableCell className="hidden md:table-cell">
-                          {item.Usage}
-                        </TableCell>
-                        <TableCell className="hidden md:table-cell">
-                          {item.Quantity}
-                        </TableCell>
-                        <TableCell className="hidden md:table-cell">
-                          {item.Description}
-                        </TableCell>
-                        <TableCell>
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button
-                                aria-haspopup="true"
-                                size="icon"
-                                variant="ghost"
-                              >
-                                <MoreHorizontal className="h-4 w-4" />
-                                <span className="sr-only">Toggle menu</span>
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                              <DropdownMenuItem
-                                onClick={() =>
-                                  handleEditClick(item.resourcesId)
-                                }
-                              >
-                                Edit
-                              </DropdownMenuItem>
-                              <DropdownMenuItem>Delete</DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })}
+                  {medicineData.map((item) => (
+                    <TableRow key={item.Id}>
+                      <TableCell className="hidden sm:table-cell">
+                        <Image
+                          alt={item.Name}
+                          className="aspect-square rounded-md object-cover"
+                          height={64}
+                          src={item.imageUrl}
+                          width={64}
+                        />
+                      </TableCell>
+                      <TableCell className="font-medium">{item.Name}</TableCell>
+                      <TableCell className="hidden md:table-cell">{item.Company}</TableCell>
+                      <TableCell className="hidden md:table-cell">{item.Usage}</TableCell>
+                      <TableCell className="hidden md:table-cell">{item.Quantity}</TableCell>
+                      <TableCell className="hidden md:table-cell">{item.Description}</TableCell>
+                      <TableCell>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button aria-haspopup="true" size="icon" variant="ghost">
+                              <MoreHorizontal className="h-4 w-4" />
+                              <span className="sr-only">Toggle menu</span>
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                            <DropdownMenuItem onClick={() => handleEditClick(item.Id)}>
+                              Edit
+                            </DropdownMenuItem>
+                            <DropdownMenuItem>Delete</DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </TableCell>
+                    </TableRow>
+                  ))}
                 </TableBody>
               </Table>
             </CardContent>
