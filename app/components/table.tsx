@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -26,12 +26,20 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { AlertTriangle, CheckCircle } from "lucide-react";
+
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import React, { useEffect, useState } from "react";
-
-// Interface for Medicine Data
 interface Medicine {
-  Id: string; // Update to match the API response
+  Id: string;
   Name: string;
   Company: string;
   Usage: string;
@@ -44,10 +52,12 @@ export default function Datatable() {
   const [medicineData, setMedicineData] = useState<Medicine[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+  const [successDialogOpen, setSuccessDialogOpen] = useState(false);
+  const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
   const router = useRouter();
 
   useEffect(() => {
-    // Fetch data from API
     const fetchData = async () => {
       try {
         const response = await fetch(
@@ -68,10 +78,43 @@ export default function Datatable() {
     fetchData();
   }, []);
 
-  const handleEditClick = (id: string): void => {
-    console.log("Navigating to edit page with ID:", id); // Log the ID for debugging
-    router.push(`/resources/${id}`); // Navigate to dynamic route with Id
+  const handleDeleteClick = (id: string) => {
+    setSelectedItemId(id); // Set the item to be deleted
+    setConfirmDialogOpen(true); // Open the confirmation dialog
   };
+
+  const handleDeleteConfirm = async () => {
+    if (!selectedItemId) return;
+
+    try {
+      const response = await fetch(
+        `https://64145d0d36020cecfda67863.mockapi.io/Medicines/${selectedItemId}`,
+        { method: "DELETE" }
+      );
+      if (!response.ok) {
+        throw new Error("Failed to delete the item");
+      }
+
+      // Remove the deleted item from the state
+      setMedicineData((prevData) =>
+        prevData.filter((item) => item.Id !== selectedItemId)
+      );
+      setConfirmDialogOpen(false); // Close the confirmation dialog
+      setSuccessDialogOpen(true); // Open the success dialog
+    } catch (error) {
+      console.error("Error deleting item:", error);
+    }
+  };
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (successDialogOpen) {
+      timer = setTimeout(() => {
+        setSuccessDialogOpen(false);
+      }, 1500);
+    }
+    return () => clearTimeout(timer);
+  }, [successDialogOpen]);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -93,17 +136,15 @@ export default function Datatable() {
                 <CardDescription>Manage your Resources</CardDescription>
               </div>
 
-              {/* Searchbar and Dropdown */}
+              {/* Searchbar and Add New Item Button */}
               <div className="relative flex items-center gap-2">
-                {/* Dropdown button connected to the search bar */}
                 <div className="relative">
                   <button
-                    className="peer btn btn-outline btn-sm flex items-center justify-between rounded-l-md border border-input bg-muted/40 px-3 py-2 text-sm font-semibold text-foreground shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-muted-foreground"
+                    className="btn btn-outline btn-sm flex items-center justify-between rounded-l-md border border-input bg-muted/40 px-3 py-2 text-sm font-semibold text-foreground shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-muted-foreground"
                     type="button"
-                    aria-haspopup="true"
-                    aria-expanded="false"
+                    onClick={() => router.push(`/resources/new`)}
                   >
-                    Dropdown
+                    Add New Item
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       className="ml-1 h-4 w-4"
@@ -112,50 +153,20 @@ export default function Datatable() {
                     >
                       <path
                         fillRule="evenodd"
-                        d="M5.292 7.707a1 1 0 011.415 0l3 3a1 1 0 010 1.415l-3 3a1 1 0 01-1.415-1.415L7.586 12 5.293 9.707a1 1 0 010-1.414z"
+                        d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
                         clipRule="evenodd"
                       />
                     </svg>
                   </button>
-                  <div className="invisible absolute left-0 z-10 mt-2 w-48 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 peer-focus:visible peer-focus:opacity-100 focus-within:visible peer-focus-within:block">
-                    <a
-                      className="dropdown-item block px-4 py-2 text-sm text-muted-foreground hover:bg-muted/40"
-                      href="#"
-                    >
-                      Action
-                    </a>
-                    <a
-                      className="dropdown-item block px-4 py-2 text-sm text-muted-foreground hover:bg-muted/40"
-                      href="#"
-                    >
-                      Another action
-                    </a>
-                    <a
-                      className="dropdown-item block px-4 py-2 text-sm text-muted-foreground hover:bg-muted/40"
-                      href="#"
-                    >
-                      Something else here
-                    </a>
-                    <div
-                      role="separator"
-                      className="dropdown-divider border-t my-1"
-                    ></div>
-                    <a
-                      className="dropdown-item block px-4 py-2 text-sm text-muted-foreground hover:bg-muted/40"
-                      href="#"
-                    >
-                      Separated link
-                    </a>
-                  </div>
                 </div>
 
-                {/* Search input connected to dropdown */}
+                {/* Search input */}
                 <div className="relative">
                   <input
                     type="text"
                     className="w-50 rounded-r-md border border-input bg-background pl-3 pr-10 py-2 text-sm shadow-sm focus:border-accent focus:ring-2 focus:ring-accent"
                     placeholder="Search..."
-                    aria-label="Search input with dropdown"
+                    aria-label="Search input"
                   />
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -185,51 +196,54 @@ export default function Datatable() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="hidden w-[100px] sm:table-cell">
-                      <span className="sr-only">Image</span>
-                    </TableHead>
+                    <TableHead>Image</TableHead>
                     <TableHead>Name</TableHead>
                     <TableHead>Company</TableHead>
-                    <TableHead className="hidden md:table-cell">Usage</TableHead>
-                    <TableHead className="hidden md:table-cell">Quantity</TableHead>
-                    <TableHead className="hidden md:table-cell">Description</TableHead>
-                    <TableHead>
-                      <span className="sr-only">Actions</span>
-                    </TableHead>
+                    <TableHead>Usage</TableHead>
+                    <TableHead>Quantity</TableHead>
+                    <TableHead>Description</TableHead>
+                    <TableHead>Actions</TableHead>
                   </TableRow>
                 </TableHeader>
 
                 <TableBody>
                   {medicineData.map((item) => (
                     <TableRow key={item.Id}>
-                      <TableCell className="hidden sm:table-cell">
+                      <TableCell>
                         <Image
                           alt={item.Name}
-                          className="aspect-square rounded-md object-cover"
+                          className="aspect-square rounded-md"
                           height={64}
                           src={item.imageUrl}
                           width={64}
                         />
                       </TableCell>
-                      <TableCell className="font-medium">{item.Name}</TableCell>
-                      <TableCell className="hidden md:table-cell">{item.Company}</TableCell>
-                      <TableCell className="hidden md:table-cell">{item.Usage}</TableCell>
-                      <TableCell className="hidden md:table-cell">{item.Quantity}</TableCell>
-                      <TableCell className="hidden md:table-cell">{item.Description}</TableCell>
+                      <TableCell>{item.Name}</TableCell>
+                      <TableCell>{item.Company}</TableCell>
+                      <TableCell>{item.Usage}</TableCell>
+                      <TableCell>{item.Quantity}</TableCell>
+                      <TableCell>{item.Description}</TableCell>
                       <TableCell>
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
-                            <Button aria-haspopup="true" size="icon" variant="ghost">
+                            <Button size="icon" variant="ghost">
                               <MoreHorizontal className="h-4 w-4" />
-                              <span className="sr-only">Toggle menu</span>
                             </Button>
                           </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
+                          <DropdownMenuContent>
                             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                            <DropdownMenuItem onClick={() => handleEditClick(item.Id)}>
+                            <DropdownMenuItem
+                              onClick={() =>
+                                router.push(`/resources/${item.Id}`)
+                              }
+                            >
                               Edit
                             </DropdownMenuItem>
-                            <DropdownMenuItem>Delete</DropdownMenuItem>
+                            <DropdownMenuItem
+                              onClick={() => handleDeleteClick(item.Id)}
+                            >
+                              Delete
+                            </DropdownMenuItem>
                           </DropdownMenuContent>
                         </DropdownMenu>
                       </TableCell>
@@ -241,6 +255,53 @@ export default function Datatable() {
           </Card>
         </TabsContent>
       </Tabs>
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={confirmDialogOpen} onOpenChange={setConfirmDialogOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <AlertTriangle className="h-5 w-5 text-destructive" />
+              Confirm Deletion
+            </DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete this item? This action cannot be
+              undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={() => setConfirmDialogOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="button"
+              variant="destructive"
+              onClick={handleDeleteConfirm}
+            >
+              Delete
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Success Dialog */}
+      <Dialog open={successDialogOpen} onOpenChange={setSuccessDialogOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <CheckCircle className="h-5 w-5 text-green-500" />
+              Deletion Successful
+            </DialogTitle>
+            <DialogDescription>
+              The item has been successfully deleted.
+            </DialogDescription>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
