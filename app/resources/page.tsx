@@ -288,6 +288,7 @@ export default function Datatable() {
       {/* Modal for displaying selected item details */}
       {selectedItemData && (
         <Dialog open={modalOpen} onOpenChange={setModalOpen}>
+          <div className="flex flex-col gap-3">
           <DialogContent className="rounded-lg">
             <DialogHeader>
               <DialogTitle>{selectedItemData.Name}</DialogTitle>
@@ -296,10 +297,10 @@ export default function Datatable() {
                   <strong>Company:</strong> {selectedItemData.Company}
                 </p>
                 <p>
-                  <strong>Usage:</strong> {selectedItemData.Usage}
+                  <strong>Quantity:</strong> {selectedItemData.Quantity}
                 </p>
                 <p>
-                  <strong>Quantity:</strong> {selectedItemData.Quantity}
+                  <strong>Usage:</strong> {selectedItemData.Usage}
                 </p>
                 <p>
                   <strong>Description:</strong> {selectedItemData.Description}
@@ -321,6 +322,7 @@ export default function Datatable() {
               </Button>
             </DialogFooter>
           </DialogContent>
+          </div>
         </Dialog>
       )}
 
