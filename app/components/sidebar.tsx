@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import {
   IconArrowLeft,
   IconBrandTabler,
-  IconSettings,
+  IconHospital,
   IconPill,
 } from "@tabler/icons-react";
 import Link from "next/link";
@@ -24,8 +24,8 @@ export default function SidebarDemo() {
     },
     {
       label: "Settings",
-      href: "/settings",
-      icon: <IconSettings className="h-5 w-5" />,
+      href: "/hospitals",
+      icon: <IconHospital className="h-5 w-5" />, // Changed to hospital icon
     },
     {
       label: "Logout",
@@ -33,6 +33,7 @@ export default function SidebarDemo() {
       icon: <IconArrowLeft className="h-5 w-5" />,
     },
   ];
+  
 
   const [open, setOpen] = useState(false);
 
