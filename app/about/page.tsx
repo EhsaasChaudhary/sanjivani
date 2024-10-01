@@ -24,6 +24,7 @@ export default function About() {
                 <li>TypeScript</li>
                 <li>Tailwind CSS</li>
                 <li>Shadcn UI</li>
+                <li>Aceternity UI</li>
               </ul>
             </div>
             <div>
@@ -40,18 +41,18 @@ export default function About() {
         {/* Developer 1 */}
         <Card>
           <CardHeader>
-            <CardTitle>Jane Doe</CardTitle>
+            <CardTitle>Soham Sagathiya</CardTitle>
             <CardDescription>Full Stack Developer</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-2">
-              <p>Experienced developer with a passion for creating elegant and efficient web solutions.</p>
-              <p>University: Tech University</p>
+              <p>Experienced developer with a passion for creating elegant and efficient web solutions using full stack technologies and AWS.</p>
+              <p>University: Darshan University</p>
               <div className="flex space-x-2">
-                <Link href="https://github.com/janedoe" className="text-gray-600 hover:text-gray-900">
+                <Link href="https://github.com/soham901" className="text-gray-600 hover:text-gray-900">
                   <Github className="h-6 w-6" />
                 </Link>
-                <Link href="https://linkedin.com/in/janedoe" className="text-gray-600 hover:text-gray-900">
+                <Link href="https://www.linkedin.com/in/soham-sagathiya" className="text-gray-600 hover:text-gray-900">
                   <Linkedin className="h-6 w-6" />
                 </Link>
               </div>
@@ -62,18 +63,18 @@ export default function About() {
         {/* Developer 2 */}
         <Card>
           <CardHeader>
-            <CardTitle>John Smith</CardTitle>
+            <CardTitle>Ehsaas Chaudhary</CardTitle>
             <CardDescription>Frontend Specialist</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-2">
               <p>UI/UX enthusiast with a keen eye for design and a knack for creating intuitive user interfaces.</p>
-              <p>University: Design Institute</p>
+              <p>University: Darshan University</p>
               <div className="flex space-x-2">
-                <Link href="https://github.com/johnsmith" className="text-gray-600 hover:text-gray-900">
+                <Link href="https://github.com/EhsaasChaudhary" className="text-gray-600 hover:text-gray-900">
                   <Github className="h-6 w-6" />
                 </Link>
-                <Link href="https://linkedin.com/in/johnsmith" className="text-gray-600 hover:text-gray-900">
+                <Link href="linkedin.com/in/Ehsaas-Chaudhary" className="text-gray-600 hover:text-gray-900">
                   <Linkedin className="h-6 w-6" />
                 </Link>
               </div>
