@@ -51,7 +51,7 @@ export default function SidebarDemo() {
         <SidebarBody className="justify-between gap-10">
           <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
             {open ? <span></span> : <LogoIcon />}
-            <div className="flex mt-4 flex-col gap-2">
+            <div className="flex pt-20 flex-col gap-2">
               {links.map((link, idx) => (
                 <SidebarLink
                   key={idx}

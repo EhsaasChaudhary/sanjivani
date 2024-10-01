@@ -1,79 +1,105 @@
-"use client";
+"use client"; // Make sure to include this at the top of your component
 
-import Link from "next/link";
-import Image from "next/image";
-import { Button } from "@/components/ui/button";
+// import React, { useState } from "react";
+import {
+  // HoveredLink,
+  Menu,
+  // MenuItem,
+  // ProductItem,
+} from "@/components/ui/navbar-menu"; // Make sure to import your Navbar components
 import {
   DropdownMenu,
+  DropdownMenuTrigger,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  Menubar,
-  MenubarMenu,
-  MenubarTrigger,
-} from "@/components/ui/menubar";
-import { motion } from "framer-motion";
+  DropdownMenuItem,
+} from "@/components/ui/dropdown-menu"; // Import your Dropdown components
+import { Button } from "@/components/ui/button"; // Import Button component
+import Image from "next/image"; // Import Image component
+import Link from "next/link";
 
-export function Headbar() {
+export function NavbarDemo() {
   return (
-    <header className="flex h-16 items-center gap-4 border-b pb-2 pt-2 justify-between bg-muted/40 px-4 lg:h-[70px] lg:px-6">
-      {/* Left: Software name with icon */}
-      <Link href="/" className="flex items-center gap-2 font-semibold">
-        <div className="font-normal flex space-x-2 items-center text-sm text-black py-1 relative z-20">
-          <div className="h-5 w-6 bg-black dark:bg-white rounded-br-lg rounded-tr-sm rounded-tl-lg rounded-bl-sm flex-shrink-0" />
-          <motion.span
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="font-medium text-black dark:text-white whitespace-pre"
-          ></motion.span>
-        </div>
-        <span>Sanjivani Care</span>
-      </Link>
-
-      {/* Center: Menubar */}
-
-        <Menubar className="bg-muted/40 border-none flex justify-center">
-          <MenubarMenu>
-            <MenubarTrigger className="hover:bg-muted/50">File</MenubarTrigger>
-          </MenubarMenu>
-          <MenubarMenu>
-            <MenubarTrigger className="hover:bg-muted/50">Edit</MenubarTrigger>
-          </MenubarMenu>
-          <MenubarMenu>
-            <MenubarTrigger className="hover:bg-muted/50">View</MenubarTrigger>
-          </MenubarMenu>
-        </Menubar>
-      
-
-      {/* Right: User profile dropdown */}
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="secondary" size="icon" className="rounded-full">
-            <Image
-              src="https://assets.aceternity.com/manu.png"
-              className="h-8 w-8 rounded-full"
-              width={32}
-              height={32}
-              alt="User Avatar"
-            />
-            <span className="sr-only">Toggle user menu</span>
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuLabel className="flex items-center gap-2">
-            <span>Manu Arora</span>
-          </DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem>Settings</DropdownMenuItem>
-          <DropdownMenuItem>Support</DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem>Logout</DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    </header>
+    <div className="relative w-full flex items-center justify-center">
+      <Navbar />
+    </div>
   );
 }
+
+function Navbar() {
+  // const [active, setActive] = useState<string | null>(null);
+
+  const menuItems = [
+    {
+      title: "Home",
+      links: [
+        { href: "/", label: "Home" },
+      ],
+    },
+    {
+      title: "Dashboard",
+      links: [
+        { href: "/Dashboard", label: "Dashboard" },
+      ],
+    },
+    {
+      title: "About",
+      links: [
+        { href: "/about", label: "About" },
+      ],
+    },
+  ];
+
+  return (
+    <div className="fixed top-10 inset-x-0 max-w-2xl z-50 p flex items-center justify-between">
+      <Menu>
+        <div className="flex-grow flex items-center justify-start">
+          <span className="text-black font-bold text-lg">Sanjivani Care</span>
+        </div>
+        {menuItems.map((item, index) => (
+            <div key={index} className="flex flex-col space-y-4 text-sm">
+              {item.links &&
+                item.links.map((link, linkIndex) => (
+                  <Link key={linkIndex} href={link.href}>{link.label}</Link>
+                ))}
+            </div>
+        ))}
+        <div className="flex-shrink-0">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="secondary"
+                size="icon"
+                className="rounded-full"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                <Image
+                  src="https://assets.aceternity.com/manu.png"
+                  className="h-8 w-8 rounded-full"
+                  width={32}
+                  height={32}
+                  alt="User Avatar"
+                />
+                <span className="sr-only">Toggle user menu</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel className="flex items-center gap-2">
+                <span>Manu Arora</span>
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>Settings</DropdownMenuItem>
+              <DropdownMenuItem>Support</DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>Logout</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      </Menu>
+    </div>
+  );
+}
+
+export default NavbarDemo; // Ensure you're exporting the NavbarDemo for use in other parts of your app
