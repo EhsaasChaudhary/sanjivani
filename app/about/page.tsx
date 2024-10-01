@@ -1,6 +1,12 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Github, Linkedin } from "lucide-react"
-import Link from "next/link"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Github, Linkedin } from "lucide-react";
+import Link from "next/link";
 
 export default function About() {
   return (
@@ -8,13 +14,21 @@ export default function About() {
       {/* Website Info Card */}
       <Card className="mb-8">
         <CardHeader>
-          <CardTitle className="text-2xl font-bold">About Our Website</CardTitle>
+          <CardTitle className="text-2xl font-bold">
+            About Our Website
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             <div>
               <h3 className="font-semibold">Description</h3>
-              <p>Our website is a cutting-edge platform designed to showcase innovative web development techniques and provide valuable resources for developers.</p>
+              <p>
+                Our platform is designed to empower healthcare professionals by
+                simplifying hospital resource management through cutting-edge
+                web development solutions. We provide intuitive tools and
+                valuable resources to enhance operational efficiency and improve
+                patient care.
+              </p>
             </div>
             <div>
               <h3 className="font-semibold">Tech Stack</h3>
@@ -22,6 +36,7 @@ export default function About() {
                 <li>Next.js</li>
                 <li>React</li>
                 <li>TypeScript</li>
+                <li>Python</li>
                 <li>Tailwind CSS</li>
                 <li>Shadcn UI</li>
                 <li>Aceternity UI</li>
@@ -29,7 +44,16 @@ export default function About() {
             </div>
             <div>
               <h3 className="font-semibold">Purpose</h3>
-              <p>Our goal is to demonstrate best practices in web development, provide a learning platform for aspiring developers, and showcase the capabilities of modern web technologies.</p>
+              <p>
+                Our goal is to alleviate the stressful task of resource
+                management in high-pressure environments like hospital emergency
+                units. We enable healthcare workers to focus on what truly
+                matters—saving patients' lives. Our platform is designed to
+                operate efficiently under the demanding conditions of an
+                emergency unit, ensuring that critical resources are available
+                when needed, helping to improve patient outcomes and reduce
+                operational bottlenecks.
+              </p>
             </div>
           </div>
         </CardContent>
@@ -46,13 +70,22 @@ export default function About() {
           </CardHeader>
           <CardContent>
             <div className="space-y-2">
-              <p>Experienced developer with a passion for creating elegant and efficient web solutions using full stack technologies and AWS.</p>
+              <p>
+                Experienced developer with a passion for creating elegant and
+                efficient web solutions using full stack technologies and AWS.
+              </p>
               <p>University: Darshan University</p>
               <div className="flex space-x-2">
-                <Link href="https://github.com/soham901" className="text-gray-600 hover:text-gray-900">
+                <Link
+                  href="https://github.com/soham901"
+                  className="text-gray-600 hover:text-gray-900"
+                >
                   <Github className="h-6 w-6" />
                 </Link>
-                <Link href="https://www.linkedin.com/in/soham-sagathiya" className="text-gray-600 hover:text-gray-900">
+                <Link
+                  href="https://www.linkedin.com/in/soham-sagathiya"
+                  className="text-gray-600 hover:text-gray-900"
+                >
                   <Linkedin className="h-6 w-6" />
                 </Link>
               </div>
@@ -68,13 +101,22 @@ export default function About() {
           </CardHeader>
           <CardContent>
             <div className="space-y-2">
-              <p>UI/UX enthusiast with a keen eye for design and a knack for creating intuitive user interfaces.</p>
+              <p>
+                UI/UX enthusiast with a keen eye for design and a knack for
+                creating intuitive user interfaces.
+              </p>
               <p>University: Darshan University</p>
               <div className="flex space-x-2">
-                <Link href="https://github.com/EhsaasChaudhary" className="text-gray-600 hover:text-gray-900">
+                <Link
+                  href="https://github.com/EhsaasChaudhary"
+                  className="text-gray-600 hover:text-gray-900"
+                >
                   <Github className="h-6 w-6" />
                 </Link>
-                <Link href="linkedin.com/in/Ehsaas-Chaudhary" className="text-gray-600 hover:text-gray-900">
+                <Link
+                  href="linkedin.com/in/Ehsaas-Chaudhary"
+                  className="text-gray-600 hover:text-gray-900"
+                >
                   <Linkedin className="h-6 w-6" />
                 </Link>
               </div>
@@ -83,5 +125,5 @@ export default function About() {
         </Card>
       </div>
     </div>
-  )
+  );
 }
