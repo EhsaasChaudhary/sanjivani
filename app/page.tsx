@@ -20,7 +20,7 @@ export default function Component() {
             Welcome to Our Website
           </h1>
           <p className="text-lg md:text-xl lg:text-2xl text-gray-600">
-            Discover amazing content and services tailored just for you. Our platform offers a unique experience that you won't find anywhere else.
+            Discover amazing health care and services tailored just for you. Our platform offers a unique experience that you would not find anywhere else.
           </p>
         </div>
       </div>
