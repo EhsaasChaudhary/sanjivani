@@ -17,10 +17,10 @@ export default function Component() {
       <div className="relative z-10 w-full px-4 md:px-6 lg:px-8">
         <div className="max-w-3xl mx-auto md:ml-0">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-800 mb-4 md:mb-6">
-            Welcome to Our Website
+            Welcome to Sanjivani
           </h1>
           <p className="text-lg md:text-xl lg:text-2xl text-gray-600">
-            Discover amazing health care and services tailored just for you. Our platform offers a unique experience that you would not find anywhere else.
+            Discover health care services tailored just for you. Our platform offers amazing management capabalities that you would not find anywhere else.
           </p>
         </div>
       </div>
