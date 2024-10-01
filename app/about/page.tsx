@@ -48,7 +48,7 @@ export default function About() {
                 Our goal is to alleviate the stressful task of resource
                 management in high-pressure environments like hospital emergency
                 units. We enable healthcare workers to focus on what truly
-                matters—saving patients' lives. Our platform is designed to
+                matters—saving patients lives. Our platform is designed to
                 operate efficiently under the demanding conditions of an
                 emergency unit, ensuring that critical resources are available
                 when needed, helping to improve patient outcomes and reduce
