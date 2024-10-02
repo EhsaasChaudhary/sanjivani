@@ -2,7 +2,7 @@
 
 // import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { MoreHorizontal, AlertTriangle, CheckCircle } from "lucide-react";
+import { CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -11,13 +11,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import {
   Table,
   TableBody,
@@ -53,14 +46,15 @@ export default function Datatable() {
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [successDialogOpen, setSuccessDialogOpen] = useState(false);
   const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
-  const [selectedItemData, setSelectedItemData] = useState<Hospital | null>(null); // New state for selected item data
+  const [selectedItemData, setSelectedItemData] = useState<Hospital | null>(
+    null
+  ); // New state for selected item data
   const [searchInput, setSearchInput] = useState<string>("");
   const [modalOpen, setModalOpen] = useState(false); // State for modal visibility
 
   const router = useRouter();
 
   useEffect(() => {
-
     const fetchHospitals = async () => {
       try {
         const response = await fetch(
@@ -87,7 +81,6 @@ export default function Datatable() {
         console.error("Error:", error);
       }
     };
-
 
     fetchHospitals();
   }, []);
@@ -241,40 +234,14 @@ export default function Datatable() {
 
                 <TableBody>
                   {filteredData.map((item) => (
-                    <TableRow key={item.id} onClick={() => handleRowClick(item)}>
+                    <TableRow
+                      key={item.id}
+                      onClick={() => handleRowClick(item)}
+                    >
                       <TableCell>{item.name}</TableCell>
                       <TableCell>{item.address}</TableCell>
                       <TableCell>{item.latitude}</TableCell>
                       <TableCell>{item.longitude}</TableCell>
-                      <TableCell>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              className="h-8 w-8 p-0"
-                            >
-                              <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                            <DropdownMenuItem
-                              onClick={() =>
-                                router.push(`/hospitals/${String(item.id)}`)
-                              }
-                            >
-                              Edit
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              className="text-red-600 flex items-center"
-                              onClick={() => handleDeleteClick(item.id)}
-                            >
-                              <AlertTriangle className="mr-2 h-4 w-4" />
-                              Delete
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -288,37 +255,38 @@ export default function Datatable() {
       {selectedItemData && (
         <Dialog open={modalOpen} onOpenChange={setModalOpen}>
           <div className="flex flex-col gap-3">
-          <DialogContent className="rounded-lg">
-            <DialogHeader>
-              <DialogTitle>{selectedItemData.name}</DialogTitle>
-              <DialogDescription>
-                <p>
-                  <strong>address:</strong> {selectedItemData.address}
-                </p>
-                <p>
-                  <strong>latitude:</strong> {selectedItemData.latitude}
-                </p>
-                <p>
-                  <strong>longitude:</strong> {selectedItemData.longitude}
-                </p>
-                
-              </DialogDescription>
-            </DialogHeader>
-            <DialogFooter className="flex justify-end space-x-2">
-              <Button
-                variant="ghost"
-                onClick={() => router.push(`/hospitals/${String(selectedItemData?.id)}`)}
-              >
-                Edit
-              </Button>
-              <Button
-                variant="destructive"
-                onClick={() => handleDeleteClick(selectedItemData.id)}
-              >
-                Delete
-              </Button>
-            </DialogFooter>
-          </DialogContent>
+            <DialogContent className="rounded-lg">
+              <DialogHeader>
+                <DialogTitle>{selectedItemData.name}</DialogTitle>
+                <DialogDescription>
+                  <p>
+                    <strong>address:</strong> {selectedItemData.address}
+                  </p>
+                  <p>
+                    <strong>latitude:</strong> {selectedItemData.latitude}
+                  </p>
+                  <p>
+                    <strong>longitude:</strong> {selectedItemData.longitude}
+                  </p>
+                </DialogDescription>
+              </DialogHeader>
+              <DialogFooter className="flex justify-end space-x-2">
+                <Button
+                  variant="ghost"
+                  onClick={() =>
+                    router.push(`/hospitals/${String(selectedItemData?.id)}`)
+                  }
+                >
+                  Edit
+                </Button>
+                <Button
+                  variant="destructive"
+                  onClick={() => handleDeleteClick(selectedItemData.id)}
+                >
+                  Delete
+                </Button>
+              </DialogFooter>
+            </DialogContent>
           </div>
         </Dialog>
       )}
