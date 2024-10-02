@@ -14,15 +14,21 @@ import {
 import { Search } from "lucide-react";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 
+// Define the Medicine interface
+interface Medicine {
+  id: number;
+  name: string;
+}
+
 const MedicinesList = ({
   setCount,
 }: {
   setCount: Dispatch<SetStateAction<number>>;
 }) => {
-  const [medicines, setMedicines] = useState<any[]>([]);
+  const [medicines, setMedicines] = useState<Medicine[]>([]);
   const [medicineSearch, setMedicineSearch] = useState<string>("");
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
   const filteredMedicines = medicines.filter((medicine) =>
     medicine.name.toLowerCase().startsWith(medicineSearch.toLowerCase())
@@ -47,18 +53,18 @@ const MedicinesList = ({
           throw new Error("Network response was not ok");
         }
 
-        const data = await response.json();
+        const data: Medicine[] = await response.json();
         setMedicines(data);
         setCount(data.length);
-      } catch (err: any) {
-        setError(err.message);
+      } catch (err) {
+        setError((err as Error).message);
       } finally {
         setLoading(false);
       }
     };
 
     fetchMedicines();
-  }, []);
+  }, [setCount]); // Add setCount to the dependency array
 
   if (loading) {
     return <div>Loading...</div>;
