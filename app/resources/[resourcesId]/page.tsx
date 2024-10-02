@@ -27,16 +27,6 @@ import { CheckCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Card } from "@/components/ui/card";
 
-[
-  {
-    name: "string",
-    description: "string",
-    quantity: 0,
-    price_per_unit: 0,
-    hospital_id: 0,
-    id: 0,
-  },
-];
 
 // Schema for validating medicine form data
 const MedicineSchema = z.object({
