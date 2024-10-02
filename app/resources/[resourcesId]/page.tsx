@@ -28,7 +28,7 @@ import { useRouter } from "next/navigation";
 import { Card } from "@/components/ui/card";
 
 const MedicineSchema = z.object({
-  hospital_id: z.number(),
+  hospital_id: z.string(),
   name: z.string().min(1, "Name is required."),
   description: z.string().min(1, "Description is required."),
   quantity: z.coerce.number().gte(1, "Quantity must be greater than 0."),
@@ -45,7 +45,7 @@ const MedicineForm = ({ params }: { params: { resourcesId: string } }) => {
   const form = useForm<z.infer<typeof MedicineSchema>>({
     resolver: zodResolver(MedicineSchema),
     defaultValues: {
-      // hospital_id: "",
+      hospital_id: "",
       name: "",
       description: "",
       quantity: 1, // Default quantity set to 1
