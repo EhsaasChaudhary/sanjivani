@@ -21,9 +21,9 @@ interface Hospital {
   name: string;
 }
 
-interface HospitalResponse {
-  data: Hospital[]; // Define this based on how your API responds
-}
+// interface HospitalResponse {
+//   data: Hospital[]; // Define this based on how your API responds
+// }
 
 export default function HospitalsList({
   setCount,
