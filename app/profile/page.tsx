@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Building2, Phone, Mail, MapPin, Bed, UserCheck, Stethoscope, Calendar } from "lucide-react"
+import { Building2, Phone, Mail, MapPin, Bed } from "lucide-react"
 
 export default function HospitalProfilePage() {
   // In a real application, you would fetch this data from your backend
