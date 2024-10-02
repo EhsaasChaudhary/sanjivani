@@ -51,8 +51,6 @@ const API_URL = "http://13.126.120.181:8000/medicines"; // Keep this as is
 export default function Datatable() {
   const [medicineData, setMedicineData] = useState<Medicine[]>([]);
   const [filteredData, setFilteredData] = useState<Medicine[]>([]);
-  // const [loading, setLoading] = useState<boolean>(true);
-  // const [error, setError] = useState<string | null>(null);
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [successDialogOpen, setSuccessDialogOpen] = useState(false);
   const [selectedItemId, setSelectedItemId] = useState<number | null>(null); // Change to number
@@ -74,10 +72,10 @@ export default function Datatable() {
         const data: Medicine[] = await response.json(); // Specify the type here
         setMedicineData(data);
         setFilteredData(data);
-        setLoading(false);
+        // setLoading(false);
       } catch (err) {
-        setError((err as Error).message);
-        setLoading(false);
+        // setError((err as Error).message);
+        // setLoading(false);
       }
     };
 
