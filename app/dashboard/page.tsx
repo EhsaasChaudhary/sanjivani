@@ -32,36 +32,29 @@ export default function Dashboard() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const accessToken =
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdHJpbmciLCJleHAiOjE3Mjc4NTgxNDN9.vGEULRvuDtnr4in0CTZmIIZDrgk5mSyGWnHjxZk7W28"; // JWT token
+        const accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdHJpbmciLCJleHAiOjE3Mjc4NTgxNDN9.vGEULRvuDtnr4in0CTZmIIZDrgk5mSyGWnHjxZk7W28"; // JWT token
         const headers = {
           Authorization: `Bearer ${accessToken}`,
           "Content-Type": "application/json",
         };
-
+  
         // Fetch medicines
-        const medicineResponse = await fetch(
-          "http://13.126.120.181:8000/medicines",
-          {
-            headers,
-          }
-        );
-
+        const medicineResponse = await fetch("http://13.126.120.181:8000/medicines", {
+          headers,
+        });
+  
         // Fetch hospitals
-        const hospitalResponse = await fetch(
-          "http://13.126.120.181:8000/hospitals",
-          {
-            headers,
-          }
-        );
-
+        const hospitalResponse = await fetch("http://13.126.120.181:8000/hospitals", {
+          headers,
+        });
+  
         if (!medicineResponse.ok || !hospitalResponse.ok) {
           throw new Error("Failed to fetch data");
         }
-
+  
         const medicineData = await medicineResponse.json();
         const hospitalData = await hospitalResponse.json();
-
+  
         setMedicines(medicineData);
         setHospitals(hospitalData);
         setLoading(false);
@@ -70,9 +63,10 @@ export default function Dashboard() {
         setLoading(false);
       }
     };
-
+  
     fetchData();
   }, []);
+  
 
   // Filtered data for search functionality
   const filteredMedicines = medicines.filter((medicine) =>

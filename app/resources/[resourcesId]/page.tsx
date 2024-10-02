@@ -45,7 +45,7 @@ const MedicineForm = ({ params }: { params: { medicine_id: string } }) => {
   const [successDialogOpen, setSuccessDialogOpen] = useState<boolean>(false);
 
   // Define the JWT token
-  const accessToken = "YOUR_JWT_TOKEN_HERE"; // Replace with your actual JWT token
+  const accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdHJpbmciLCJleHAiOjE3Mjc4NjIyMjR9.cZgrQRY9LI5dsqQcK9uineahbGYbUoN-o-urZp561Ec"; // Replace with your actual JWT token
 
   const form = useForm<z.infer<typeof MedicineSchema>>({
     resolver: zodResolver(MedicineSchema),
