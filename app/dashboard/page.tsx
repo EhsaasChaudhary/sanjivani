@@ -128,7 +128,7 @@ export default function Dashboard() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Name</TableHead>
+                  <TableHead>Names</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
