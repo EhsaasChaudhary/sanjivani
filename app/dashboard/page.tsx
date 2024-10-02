@@ -1,12 +1,21 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import Link from "next/link"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Pill, Building2, Search } from "lucide-react"
+import axios from "axios";
+
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Pill, Building2, Search } from "lucide-react";
 
 // Define interfaces for Medicine and Hospital
 interface Medicine {
@@ -20,64 +29,89 @@ interface Hospital {
 }
 
 export default function Dashboard() {
-  const [medicines, setMedicines] = useState<Medicine[]>([])
-  const [hospitals, setHospitals] = useState<Hospital[]>([])
-  const [medicineSearch, setMedicineSearch] = useState<string>("")
-  const [hospitalSearch, setHospitalSearch] = useState<string>("")
+  const [isLoading, setIsLoading] = useState(true);
+  const [medicines, setMedicines] = useState<Medicine[]>([]);
+  const [hospitals, setHospitals] = useState<Hospital[]>([]);
+  const [medicineSearch, setMedicineSearch] = useState<string>("");
+  const [hospitalSearch, setHospitalSearch] = useState<string>("");
 
-  // Fetch medicines from the API
   useEffect(() => {
     const fetchMedicines = async () => {
       try {
-        const response = await fetch('http://13.126.120.181:8000/medicines/', {
-          method: 'GET',
+        const response = await fetch("http://13.126.120.181:8000/medicines/", {
+          method: "GET",
           headers: {
-            'accept': 'application/json',
-            'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdHJpbmciLCJleHAiOjE3Mjc4NjIyMjR9.cZgrQRY9LI5dsqQcK9uineahbGYbUoN-o-urZp561Ec'
-          }
-        })
-        if (response.ok) {
-          const data: Medicine[] = await response.json()
-          setMedicines(data)
-        } else {
-          console.error('Failed to fetch medicines')
+            accept: "application/json",
+            Authorization: `Bearer ${process.env.API_TOKEN}`,
+          },
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          console.error("Failed to fetch medicines:", errorData);
+          return;
         }
+
+        const data: Medicine[] = await response.json();
+        setMedicines(data);
       } catch (error) {
-        console.error('Error:', error)
+        console.error("Error:", error);
       }
-    }
+    };
 
     const fetchHospitals = async () => {
       try {
-        const response = await fetch('http://13.126.120.181:8000/hospitals/', {
-          method: 'GET',
+        const response = await fetch("http://13.126.120.181:8000/hospitals/", {
+          method: "GET",
           headers: {
-            'accept': 'application/json',
-            'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdHJpbmciLCJleHAiOjE3Mjc4NjIyMjR9.cZgrQRY9LI5dsqQcK9uineahbGYbUoN-o-urZp561Ec'
-          }
-        })
+            accept: "application/json",
+            Authorization: `Bearer ${process.env.API_TOKEN}`,
+          },
+        });
+
         if (response.ok) {
-          const data: Hospital[] = await response.json()
-          setHospitals(data)
+          const data: Hospital[] = await response.json();
+          setHospitals(data);
         } else {
-          console.error('Failed to fetch hospitals')
+          const errorData = await response.json();
+          console.error("Failed to fetch hospitals:", errorData);
         }
       } catch (error) {
-        console.error('Error:', error)
+        console.error("Error:", error);
       }
-    }
+    };
 
-    fetchMedicines()
-    fetchHospitals()
-  }, [])
+    const fetchMed = async () => {
+      return await axios.get("http://13.126.120.181:8000/medicines/", {
+        headers: {
+          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdHJpbmciLCJleHAiOjE3Mjc4NzAwNjN9.EQZg4PK2Wt4AL-YyC4xwXlniidJL-JA4V2nZ8Y12yUY`,
+        },
+      });
+    };
 
-  const filteredMedicines = medicines.filter(medicine =>
+    fetchHospitals().then(() => {
+      fetchMed().then((data) => {
+        setMedicines(data.data);
+        setIsLoading(false);
+      });
+    });
+  }, []);
+
+  const filteredMedicines = medicines.filter((medicine) =>
     medicine.name.toLowerCase().startsWith(medicineSearch.toLowerCase())
-  )
+  );
 
-  const filteredHospitals = hospitals.filter(hospital =>
+  const filteredHospitals = hospitals.filter((hospital) =>
     hospital.name.toLowerCase().startsWith(hospitalSearch.toLowerCase())
-  )
+  );
+
+  if (isLoading) {
+    return (
+      <div className="w-full h-full flex justify-center items-center">
+        Loading...
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto mt-24 p-4 space-y-6">
@@ -87,7 +121,9 @@ export default function Dashboard() {
         <Link href="/resources">
           <Card className="hover:bg-accent transition-colors">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Medicines</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Total Medicines
+              </CardTitle>
               <Pill className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
@@ -98,7 +134,9 @@ export default function Dashboard() {
         <Link href="/hospitals">
           <Card className="hover:bg-accent transition-colors">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Hospitals</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Total Hospitals
+              </CardTitle>
               <Building2 className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
@@ -176,5 +214,5 @@ export default function Dashboard() {
         </Card>
       </div>
     </div>
-  )
+  );
 }
