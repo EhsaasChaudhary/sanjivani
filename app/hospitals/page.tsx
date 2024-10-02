@@ -2,7 +2,7 @@
 
 // import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { MoreHorizontal, AlertTriangle, CheckCircle } from "lucide-react";
+import { CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
