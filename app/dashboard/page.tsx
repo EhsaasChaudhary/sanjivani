@@ -36,8 +36,6 @@ export default function Dashboard() {
   const [hospitalSearch, setHospitalSearch] = useState<string>("");
 
   useEffect(() => {
-    const login = async () => {};
-
     const fetchHospitals = async () => {
       try {
         const response = await fetch("http://13.126.120.181:8000/hospitals/", {
