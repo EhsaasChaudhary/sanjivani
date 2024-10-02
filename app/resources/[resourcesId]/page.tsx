@@ -27,13 +27,24 @@ import { CheckCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Card } from "@/components/ui/card";
 
+[
+  {
+    name: "string",
+    description: "string",
+    quantity: 0,
+    price_per_unit: 0,
+    hospital_id: 0,
+    id: 0,
+  },
+];
+
+// Schema for validating medicine form data
 const MedicineSchema = z.object({
-  Name: z.string().min(1, "Name is required."),
-  Company: z.string().min(1, "Company is required."),
-  Usage: z.string().min(1, "Usage is required."),
-  Description: z.string().min(1, "Description is required."),
-  Quantity: z.coerce.number().gte(1, "Quantity must be greater than 0."),
-  imageUrl: z.string().optional(),
+  name: z.string().min(1, "Name is required."),
+  description: z.string().min(1, "Description is required."),
+  quantity: z.coerce.number().gte(1, "Quantity must be greater than 0."),
+  price_per_unit: z.coerce.number().gte(1, "Quantity must be greater than 0."),
+  company: z.string().min(1, "Company is required."),
 });
 
 const MedicineForm = ({ params }: { params: { resourcesId: string } }) => {
@@ -44,17 +55,15 @@ const MedicineForm = ({ params }: { params: { resourcesId: string } }) => {
   const [successDialogOpen, setSuccessDialogOpen] = useState<boolean>(false);
 
   // Define the JWT token
-  const accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdHJpbmciLCJleHAiOjE3Mjc4NTgxNDN9.vGEULRvuDtnr4in0CTZmIIZDrgk5mSyGWnHjxZk7W28";
+  const accessToken = "YOUR_JWT_TOKEN_HERE"; // Replace with your actual JWT token
 
   const form = useForm<z.infer<typeof MedicineSchema>>({
     resolver: zodResolver(MedicineSchema),
     defaultValues: {
-      Name: "",
-      Company: "",
-      Usage: "",
-      Description: "",
-      Quantity: 1, // Default quantity set to 1
-      imageUrl: "",
+      name: "",
+      description: "",
+      quantity: 1, // Default quantity set to 1
+      price_per_unit: 1, // Default quantity set to 1
     },
   });
 
@@ -66,10 +75,11 @@ const MedicineForm = ({ params }: { params: { resourcesId: string } }) => {
             `http://13.126.120.181:8000/medicines/${resourcesId}`,
             {
               headers: {
-                Authorization: `Bearer ${accessToken}`, // Add JWT token here
+                Authorization: `Bearer ${accessToken}`,
               },
             }
           );
+
           if (!response.ok) {
             throw new Error(
               `Failed to fetch data for medicine with ID: ${resourcesId}`
@@ -96,7 +106,7 @@ const MedicineForm = ({ params }: { params: { resourcesId: string } }) => {
         method: resourcesId === "new" ? "POST" : "PUT",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`, // Add JWT token here
+          Authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify(data),
       };
@@ -117,7 +127,6 @@ const MedicineForm = ({ params }: { params: { resourcesId: string } }) => {
       }
 
       setSuccessDialogOpen(true);
-
       setTimeout(() => {
         setSuccessDialogOpen(false);
         router.push("/resources");
@@ -141,7 +150,7 @@ const MedicineForm = ({ params }: { params: { resourcesId: string } }) => {
           >
             <FormField
               control={form.control}
-              name="Name"
+              name="name"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Name</FormLabel>
@@ -152,35 +161,10 @@ const MedicineForm = ({ params }: { params: { resourcesId: string } }) => {
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
-              name="Company"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Company</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Company Name" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="Usage"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Usage</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Usage Instructions" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="Description"
+              name="description"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Description</FormLabel>
@@ -193,10 +177,24 @@ const MedicineForm = ({ params }: { params: { resourcesId: string } }) => {
             />
             <FormField
               control={form.control}
-              name="Quantity"
+              name="quantity"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Quantity</FormLabel>
+                  <FormControl>
+                    <Input type="number" placeholder="Quantity" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="price_per_unit"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>price per unit</FormLabel>
                   <FormControl>
                     <Input type="number" placeholder="Quantity" {...field} />
                   </FormControl>
