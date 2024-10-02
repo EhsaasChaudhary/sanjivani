@@ -36,36 +36,13 @@ export default function Dashboard() {
   const [hospitalSearch, setHospitalSearch] = useState<string>("");
 
   useEffect(() => {
-    const fetchMedicines = async () => {
-      try {
-        const response = await fetch("http://13.126.120.181:8000/medicines/", {
-          method: "GET",
-          headers: {
-            accept: "application/json",
-            Authorization: `Bearer ${process.env.API_TOKEN}`,
-          },
-        });
-
-        if (!response.ok) {
-          const errorData = await response.json();
-          console.error("Failed to fetch medicines:", errorData);
-          return;
-        }
-
-        const data: Medicine[] = await response.json();
-        setMedicines(data);
-      } catch (error) {
-        console.error("Error:", error);
-      }
-    };
-
     const fetchHospitals = async () => {
       try {
         const response = await fetch("http://13.126.120.181:8000/hospitals/", {
           method: "GET",
           headers: {
             accept: "application/json",
-            Authorization: `Bearer ${process.env.API_TOKEN}`,
+            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdHJpbmciLCJleHAiOjE3Mjc4NzAwNjN9.EQZg4PK2Wt4AL-YyC4xwXlniidJL-JA4V2nZ8Y12yUY`,
           },
         });
 
