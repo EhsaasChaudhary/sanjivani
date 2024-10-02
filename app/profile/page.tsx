@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { CalendarIcon, ClipboardIcon, HeartPulseIcon, PhoneIcon, PillIcon, UserIcon } from "lucide-react"
+import { CalendarIcon, HeartPulseIcon, PhoneIcon, PillIcon, UserIcon } from "lucide-react"
 
 export default function PatientProfilePage() {
   // In a real application, you would fetch this data from your backend
