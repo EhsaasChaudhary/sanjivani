@@ -124,7 +124,7 @@ const HospitalForm = ({ params }: { params: { hospitalsId: string } }) => {
 
   return (
     <>
-      <Card className="h-screen m-3">
+      <Card className="h-screen ml-3 mr-3 mb-3 mt-24">
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(handleSubmit)}

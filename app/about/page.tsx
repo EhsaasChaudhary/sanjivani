@@ -36,7 +36,7 @@ export default function About() {
                 <li>Next.js</li>
                 <li>React</li>
                 <li>TypeScript</li>
-                <li>Python</li>
+                <li>Python - FastAPI</li>
                 <li>Tailwind CSS</li>
                 <li>Shadcn UI</li>
                 <li>Aceternity UI</li>

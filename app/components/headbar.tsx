@@ -1,23 +1,9 @@
-"use client"; // Make sure to include this at the top of your component
+"use client"; // Ensure this is at the top of your component for Next.js
 
-// import React, { useState } from "react";
-import {
-  // HoveredLink,
-  Menu,
-  // MenuItem,
-  // ProductItem,
-} from "@/components/ui/navbar-menu"; // Make sure to import your Navbar components
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuItem,
-} from "@/components/ui/dropdown-menu"; // Import your Dropdown components
 import { Button } from "@/components/ui/button"; // Import Button component
 import Image from "next/image"; // Import Image component
-import Link from "next/link";
+import Link from "next/link"; // Import Link component
+import { usePathname } from "next/navigation";
 
 export function NavbarDemo() {
   return (
@@ -28,78 +14,79 @@ export function NavbarDemo() {
 }
 
 function Navbar() {
-  // const [active, setActive] = useState<string | null>(null);
-
+  const pathname = usePathname(); // Get the current pathname
   const menuItems = [
     {
       title: "Home",
-      links: [
-        { href: "/", label: "Home" },
-      ],
+      links: [{ href: "/", label: "Home" }],
     },
     {
       title: "Dashboard",
-      links: [
-        { href: "/Dashboard", label: "Dashboard" },
-      ],
+      links: [{ href: "/dashboard", label: "Dashboard" }],
     },
     {
       title: "About",
-      links: [
-        { href: "/about", label: "About" },
-      ],
+      links: [{ href: "/about", label: "About" }],
     },
   ];
 
+  // Determine the text color for the left heading
+  const textColor = pathname === "/" ? 'text-white' : 'text-black'; // White for home, black for others
+
   return (
-    <div className="fixed top-10 inset-x-0 max-w-2xl z-50 p flex items-center justify-between">
-      <Menu>
-        <div className="flex-grow flex items-center justify-start">
-          <span className="text-black font-bold text-lg">Sanjivani Care</span>
-        </div>
-        {menuItems.map((item, index) => (
-            <div key={index} className="flex flex-col space-y-4 text-sm">
-              {item.links &&
-                item.links.map((link, linkIndex) => (
-                  <Link key={linkIndex} href={link.href}>{link.label}</Link>
-                ))}
+    <div className="fixed top-0 left-0 w-full bg-white/30 dark:bg-black/30 backdrop-blur-md backdrop-saturate-150 border border-transparent dark:border-white/[0.2] shadow-md flex justify-between items-center px-8 py-4 z-50">
+      {/* Left section: Logo */}
+      <div className="flex items-center">
+        <span className={`font-bold text-lg ${textColor}`}>Sanjivani Care</span>
+      </div>
+
+      {/* Center section: Menu Items */}
+      <nav className="flex-grow flex justify-center">
+        <div className="flex space-x-8">
+          {menuItems.map((item, index) => (
+            <div key={index} className="text-sm">
+              {item.links.map((link, linkIndex) => {
+                // Determine if the link is active based on the current pathname
+                // const isActive = pathname === link.href;
+
+                return (
+                  <Link
+                    key={linkIndex}
+                    href={link.href}
+                    className={`font-bold px-3 py-2 transition-colors duration-200 rounded-md ${textColor} hover:bg-gray-700 hover:text-white`}
+                  >
+                    {link.label}
+                  </Link>
+                );
+              })}
             </div>
-        ))}
-        <div className="flex-shrink-0">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="secondary"
-                size="icon"
-                className="rounded-full"
-                aria-haspopup="true"
-                aria-expanded="false"
-              >
-                <Image
-                  src="https://assets.aceternity.com/manu.png"
-                  className="h-8 w-8 rounded-full"
-                  width={32}
-                  height={32}
-                  alt="User Avatar"
-                />
-                <span className="sr-only">Toggle user menu</span>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel className="flex items-center gap-2">
-                <span>Manu Arora</span>
-              </DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>Settings</DropdownMenuItem>
-              <DropdownMenuItem>Support</DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>Logout</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          ))}
         </div>
-      </Menu>
+      </nav>
+
+      {/* Right section: User Avatar */}
+      <div className="flex-shrink-0">
+        <Link href="/profile"> {/* Navigate to the profile page on click */}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="p-0 rounded-full outline-none focus:outline-none" // Remove outline on focus
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            <Image
+              src="https://assets.aceternity.com/manu.png"
+              className="h-8 w-8 rounded-full"
+              width={32}
+              height={32}
+              alt="User Avatar"
+            />
+            <span className="sr-only">Go to profile</span>
+          </Button>
+        </Link>
+      </div>
     </div>
   );
 }
 
-export default NavbarDemo; // Ensure you're exporting the NavbarDemo for use in other parts of your app
+export default NavbarDemo;
