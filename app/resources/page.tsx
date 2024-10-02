@@ -47,6 +47,7 @@ interface Medicine {
 
 // Update API_URL if needed
 const API_URL = "http://13.126.120.181:8000/medicines"; // Keep this as is
+const accessToken = "YOUR_JWT_TOKEN_HERE";
 
 export default function Datatable() {
   const [medicineData, setMedicineData] = useState<Medicine[]>([]);
@@ -63,7 +64,7 @@ export default function Datatable() {
       try {
         const response = await fetch(API_URL, {
           headers: {
-            Authorization: `Bearer ${process.env.JWT_TOKEN}`, // Adjust as necessary
+            Authorization: `Bearer ${accessToken}`, // Adjust as necessary
           },
         });
         if (!response.ok) {
@@ -83,7 +84,42 @@ export default function Datatable() {
     fetchData();
   }, []);
 
+
+
+//   useEffect(() => {
+//     const fetchMedicines = async () => {
+//         const url = 'http://13.126.120.181:8000/medicines/?skip=0&limit=100';
+
+//         try {
+//             const response = await fetch(url, {
+//                 method: 'GET',
+//                 headers: {
+//                     'Accept': 'application/json',
+//                     'Authorization': `Bearer ${JWT_TOKEN}`
+//                 }
+//             });
+
+//             if (!response.ok) {
+//                 throw new Error(`HTTP error! status: ${response.status}`);
+//             }
+
+//             const data = await response.json();
+//             setMedicines(data); // Set the fetched data to state
+//         } catch (error) {
+//             setError(error.message); // Set error message to state
+//             console.error('Error fetching medicines:', error);
+//         }
+//     };
+
+//     fetchMedicines(); // Call the fetch function
+// }, []);
+
+
+
+
   // Handle the search functionality
+  
+  
   useEffect(() => {
     const filtered = medicineData.filter((item) =>
       item.name.toUpperCase().startsWith(searchInput.toUpperCase())
