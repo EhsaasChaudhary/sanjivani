@@ -33,10 +33,10 @@ const HospitalSchema = z.object({
   longitude: z.coerce.number().gte(1, "Quantity must be greater than 0."),
 });
 
-const HospitalForm = ({ params }: { params: { hospital_id: string } }) => {
+const HospitalForm = ({ params }: { params: { hospitalsId: string } }) => {
   const router = useRouter();
-  const { hospital_id } = params;
-  const [loading, setLoading] = useState<boolean>(hospital_id !== "new");
+  const { hospitalsId } = params;
+  const [loading, setLoading] = useState<boolean>(hospitalsId !== "new");
   const [error, setError] = useState<string | null>(null);
   const [successDialogOpen, setSuccessDialogOpen] = useState<boolean>(false);
 
@@ -51,12 +51,12 @@ const HospitalForm = ({ params }: { params: { hospital_id: string } }) => {
   });
 
   useEffect(() => {
-    if (hospital_id !== "new") {
+    if (hospitalsId !== "new") {
       const fetchHospitalData = async () => {
-        console.log(hospital_id);
+        console.log(hospitalsId);
         try {
           const response = await fetch(
-            `https://healthcareinfra.soham901.me/hospitals/${hospital_id}`,
+            `https://healthcareinfra.soham901.me/hospitals/${hospitalsId}`,
             {
               method: "GET",
               headers: {
@@ -67,7 +67,7 @@ const HospitalForm = ({ params }: { params: { hospital_id: string } }) => {
           );
           if (!response.ok) {
             throw new Error(
-              `Failed to fetch data for Hospital with ID: ${hospital_id}`
+              `Failed to fetch data for Hospital with ID: ${hospitalsId}`
             );
           }
           const data = await response.json();
@@ -83,12 +83,12 @@ const HospitalForm = ({ params }: { params: { hospital_id: string } }) => {
     } else {
       setLoading(false);
     }
-  }, [hospital_id, form]);
+  }, [hospitalsId, form]);
 
   const handleSubmit = async (data: z.infer<typeof HospitalSchema>) => {
     try {
       const requestOptions = {
-        method: hospital_id === "new" ? "POST" : "PUT",
+        method: hospitalsId === "new" ? "POST" : "PUT",
         headers: {
           accept: "application/json",
           Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdHJpbmciLCJleHAiOjE3Mjc4NzU5NDR9.Q-YcKxskj_04NplxNO7OYoHORWJHozPI_JCsBrn0pLg`,
@@ -97,15 +97,15 @@ const HospitalForm = ({ params }: { params: { hospital_id: string } }) => {
       };
 
       const url =
-        hospital_id === "new"
+        hospitalsId === "new"
           ? `https://healthcareinfra.soham901.me/hospitals/`
-          : `https://64145d0d36020cecfda67863.mockapi.io/Hospitals/${hospital_id}`;
+          : `https://64145d0d36020cecfda67863.mockapi.io/Hospitals/${hospitalsId}`;
 
       const response = await fetch(url, requestOptions);
 
       if (!response.ok) {
         throw new Error(
-          hospital_id === "new"
+          hospitalsId === "new"
             ? "Failed to create new Hospital"
             : "Failed to update Hospital"
         );
@@ -187,7 +187,7 @@ const HospitalForm = ({ params }: { params: { hospital_id: string } }) => {
               )}
             />
             <Button type="submit">
-              {hospital_id === "new" ? "Create" : "Update"} Hospital
+              {hospitalsId === "new" ? "Create" : "Update"} Hospital
             </Button>
           </form>
         </Form>
@@ -199,13 +199,13 @@ const HospitalForm = ({ params }: { params: { hospital_id: string } }) => {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <CheckCircle className="h-5 w-5 text-green-500" />
-              {hospital_id === "new"
+              {hospitalsId === "new"
                 ? "Creation Successful"
                 : "Update Successful"}
             </DialogTitle>
             <DialogDescription>
               The item has been successfully{" "}
-              {hospital_id === "new" ? "added" : "updated"}.
+              {hospitalsId === "new" ? "added" : "updated"}.
             </DialogDescription>
           </DialogHeader>
         </DialogContent>

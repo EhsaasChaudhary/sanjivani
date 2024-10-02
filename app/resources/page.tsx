@@ -40,7 +40,7 @@ import React, { useEffect, useState } from "react";
 
 interface Medicine {
   id: string;
-  Name: string;
+  name: string;
   description: string;
   quantity: number;
   price_per_unit: number;
@@ -116,8 +116,14 @@ export default function Datatable() {
 
     try {
       const response = await fetch(
-        `https://64145d0d36020cecfda67863.mockapi.io/Medicines/${selectedItemId}`,
-        { method: "DELETE" }
+        `https://healthcareinfra.soham901.me/medicines/${selectedItemId}`,
+        {
+          method: "DELETE",
+          headers: {
+            accept: "application/json",
+            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdHJpbmciLCJleHAiOjE3Mjc4NzU5NDR9.Q-YcKxskj_04NplxNO7OYoHORWJHozPI_JCsBrn0pLg`,
+          },
+        }
       );
       if (!response.ok) {
         throw new Error("Failed to delete the item");
@@ -242,18 +248,9 @@ export default function Datatable() {
                 <TableBody>
                   {filteredData.map((item) => (
                     <TableRow key={item.id} onClick={() => handleRowClick(item)}>
-                      {/* <TableCell>
-                        <Image
-                          alt={item.Name}
-                          className="aspect-square rounded-md"
-                          height={64}
-                          src={item.imageUrl}
-                          width={64}
-                        />
-                      </TableCell> */}
-                      <TableCell>{item.Name}</TableCell>
-                      {/* <TableCell>{item.Company}</TableCell>
-                      <TableCell>{item.Usage}</TableCell> */}
+                      
+                      <TableCell>{item.name}</TableCell>
+                      
                       <TableCell>{item.quantity}</TableCell>
                       <TableCell>{item.description}</TableCell>
                       <TableCell>
@@ -300,7 +297,7 @@ export default function Datatable() {
           <div className="flex flex-col gap-3">
           <DialogContent className="rounded-lg">
             <DialogHeader>
-              <DialogTitle>{selectedItemData.Name}</DialogTitle>
+              <DialogTitle>{selectedItemData.name}</DialogTitle>
               <DialogDescription>
                 <p>
                   <strong>Quantity:</strong> {selectedItemData.quantity}
