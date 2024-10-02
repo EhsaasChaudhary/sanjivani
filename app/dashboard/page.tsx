@@ -36,6 +36,7 @@ export default function Dashboard() {
   const [hospitalSearch, setHospitalSearch] = useState<string>("");
 
   useEffect(() => {
+    const login = async () => {};
 
     const fetchHospitals = async () => {
       try {
@@ -43,7 +44,7 @@ export default function Dashboard() {
           method: "GET",
           headers: {
             accept: "application/json",
-            Authorization: `Bearer ${process.env.API_TOKEN}`,
+            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdHJpbmciLCJleHAiOjE3Mjc4NzE3NDZ9.lCjZjbd4_0HwdAtPl4g26gaem_kc9LyKLmssX3nQ1qs`,
           },
         });
 
@@ -62,7 +63,7 @@ export default function Dashboard() {
     const fetchMed = async () => {
       return await axios.get("http://13.126.120.181:8000/medicines/", {
         headers: {
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdHJpbmciLCJleHAiOjE3Mjc4NzAwNjN9.EQZg4PK2Wt4AL-YyC4xwXlniidJL-JA4V2nZ8Y12yUY`,
+          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdHJpbmciLCJleHAiOjE3Mjc4NzE3NDZ9.lCjZjbd4_0HwdAtPl4g26gaem_kc9LyKLmssX3nQ1qs`,
         },
       });
     };
