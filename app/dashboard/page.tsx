@@ -38,13 +38,16 @@ export default function Dashboard() {
   useEffect(() => {
     const fetchHospitals = async () => {
       try {
-        const response = await fetch("http://13.126.120.181:8000/hospitals/", {
-          method: "GET",
-          headers: {
-            accept: "application/json",
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdHJpbmciLCJleHAiOjE3Mjc4NzE3NDZ9.lCjZjbd4_0HwdAtPl4g26gaem_kc9LyKLmssX3nQ1qs`,
-          },
-        });
+        const response = await fetch(
+          "https://healthcareinfra.soham901.me/hospitals/",
+          {
+            method: "GET",
+            headers: {
+              accept: "application/json",
+              Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdHJpbmciLCJleHAiOjE3Mjc4NzU5NDR9.Q-YcKxskj_04NplxNO7OYoHORWJHozPI_JCsBrn0pLg`,
+            },
+          }
+        );
 
         if (response.ok) {
           const data: Hospital[] = await response.json();
@@ -59,9 +62,9 @@ export default function Dashboard() {
     };
 
     const fetchMed = async () => {
-      return await axios.get("http://13.126.120.181:8000/medicines/", {
+      return await axios.get("https://healthcareinfra.soham901.me/medicines/", {
         headers: {
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdHJpbmciLCJleHAiOjE3Mjc4NzE3NDZ9.lCjZjbd4_0HwdAtPl4g26gaem_kc9LyKLmssX3nQ1qs`,
+          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdHJpbmciLCJleHAiOjE3Mjc4NzU5NDR9.Q-YcKxskj_04NplxNO7OYoHORWJHozPI_JCsBrn0pLg`,
         },
       });
     };
