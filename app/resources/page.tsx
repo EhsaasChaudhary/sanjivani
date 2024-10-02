@@ -38,11 +38,13 @@ import { Tabs, TabsContent } from "@/components/ui/tabs";
 import React, { useEffect, useState } from "react";
 
 interface Medicine {
-  price_per_unit: number;
   Id: string;
-  name: string;
-  description: string;
-  quantity: number;
+  Name: string;
+  Company: string;
+  Usage: string;
+  Description: string;
+  Quantity: number;
+  imageUrl: string;
 }
 
 export default function Datatable() {
@@ -52,27 +54,19 @@ export default function Datatable() {
   const [error, setError] = useState<string | null>(null);
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [successDialogOpen, setSuccessDialogOpen] = useState(false);
-  const [medicine_id, setmedicine_id] = useState<string | null>(null);
-  const [selectedItemData, setSelectedItemData] = useState<Medicine | null>(
-    null
-  ); // New state for selected item data
+  const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
+  const [selectedItemData, setSelectedItemData] = useState<Medicine | null>(null); // New state for selected item data
   const [searchInput, setSearchInput] = useState<string>("");
   const [modalOpen, setModalOpen] = useState(false); // State for modal visibility
 
   const router = useRouter();
 
-  const API_URL = "http://13.126.120.181:8000/medicines"; // Keep this as is
-  const accessToken =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdHJpbmciLCJleHAiOjE3Mjc4NjIyMjR9.cZgrQRY9LI5dsqQcK9uineahbGYbUoN-o-urZp561Ec";
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(API_URL, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-
+        const response = await fetch(
+          "https://64145d0d36020cecfda67863.mockapi.io/Medicines"
+        );
         if (!response.ok) {
           throw new Error("Failed to fetch data");
         }
@@ -92,7 +86,7 @@ export default function Datatable() {
   // Handle the search functionality
   useEffect(() => {
     const filtered = medicineData.filter((item) =>
-      item.name.toUpperCase().startsWith(searchInput.toUpperCase())
+      item.Name.toUpperCase().startsWith(searchInput.toUpperCase())
     );
     setFilteredData(filtered);
   }, [searchInput, medicineData]);
@@ -102,29 +96,26 @@ export default function Datatable() {
   };
 
   const handleDeleteClick = (id: string) => {
-    setmedicine_id(id); // Set the item to be deleted
+    setSelectedItemId(id); // Set the item to be deleted
     setConfirmDialogOpen(true); // Open the confirmation dialog
     setModalOpen(false);
   };
 
   const handleDeleteConfirm = async () => {
-    if (!medicine_id) return;
+    if (!selectedItemId) return;
 
     try {
-      const response = await fetch(`${API_URL}/${medicine_id}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-
+      const response = await fetch(
+        `https://64145d0d36020cecfda67863.mockapi.io/Medicines/${selectedItemId}`,
+        { method: "DELETE" }
+      );
       if (!response.ok) {
         throw new Error("Failed to delete the item");
       }
 
       // Remove the deleted item from the state
       setMedicineData((prevData) =>
-        prevData.filter((item) => item.Id !== medicine_id)
+        prevData.filter((item) => item.Id !== selectedItemId)
       );
       setConfirmDialogOpen(false); // Close the confirmation dialog
       setSuccessDialogOpen(true); // Open the success dialog
@@ -229,8 +220,10 @@ export default function Datatable() {
               <Table>
                 <TableHeader>
                   <TableRow>
+                    <TableHead>Image</TableHead>
                     <TableHead>Name</TableHead>
-                    <TableHead>ppu</TableHead>
+                    <TableHead>Company</TableHead>
+                    <TableHead>Usage</TableHead>
                     <TableHead>Quantity</TableHead>
                     <TableHead>Description</TableHead>
                     <TableHead>Actions</TableHead>
@@ -239,26 +232,45 @@ export default function Datatable() {
 
                 <TableBody>
                   {filteredData.map((item) => (
-                    <TableRow key={item.Id}>
-                      <TableCell>{item.name}</TableCell>
-                      <TableCell>{item.price_per_unit}</TableCell>
-                      <TableCell>{item.quantity}</TableCell>
-                      <TableCell>{item.description}</TableCell>
-                      <TableCell className="text-center">
+                    <TableRow key={item.Id} onClick={() => handleRowClick(item)}>
+                      <TableCell>
+                        <Image
+                          alt={item.Name}
+                          className="aspect-square rounded-md"
+                          height={64}
+                          src={item.imageUrl}
+                          width={64}
+                        />
+                      </TableCell>
+                      <TableCell>{item.Name}</TableCell>
+                      <TableCell>{item.Company}</TableCell>
+                      <TableCell>{item.Usage}</TableCell>
+                      <TableCell>{item.Quantity}</TableCell>
+                      <TableCell>{item.Description}</TableCell>
+                      <TableCell>
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" className="h-8 w-8 p-0">
-                              <span className="sr-only">Open menu</span>
+                            <Button
+                              variant="ghost"
+                              className="h-8 w-8 p-0"
+                            >
                               <MoreHorizontal className="h-4 w-4" />
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
                             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                            <DropdownMenuItem>Edit</DropdownMenuItem>
                             <DropdownMenuItem
-                              className="text-red-500"
-                              onClick={() => handleDeleteClick(item.Id)} // Change to id
+                              onClick={() =>
+                                router.push(`/resources/${item.Id}`)
+                              }
                             >
+                              Edit
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              className="text-red-600 flex items-center"
+                              onClick={() => handleDeleteClick(item.Id)}
+                            >
+                              <AlertTriangle className="mr-2 h-4 w-4" />
                               Delete
                             </DropdownMenuItem>
                           </DropdownMenuContent>
@@ -277,36 +289,39 @@ export default function Datatable() {
       {selectedItemData && (
         <Dialog open={modalOpen} onOpenChange={setModalOpen}>
           <div className="flex flex-col gap-3">
-            <DialogContent className="rounded-lg">
-              <DialogHeader>
-                <DialogTitle>{selectedItemData.name}</DialogTitle>
-                <DialogDescription>
-                  <p>
-                    <strong>Quantity:</strong> {selectedItemData.quantity}
-                  </p>
-
-                  <p>
-                    <strong>Description:</strong> {selectedItemData.description}
-                  </p>
-                </DialogDescription>
-              </DialogHeader>
-              <DialogFooter className="flex justify-end space-x-2">
-                <Button
-                  variant="ghost"
-                  onClick={() =>
-                    router.push(`/resources/${selectedItemData.Id}`)
-                  }
-                >
-                  Edit
-                </Button>
-                <Button
-                  variant="destructive"
-                  onClick={() => handleDeleteClick(selectedItemData.Id)}
-                >
-                  Delete
-                </Button>
-              </DialogFooter>
-            </DialogContent>
+          <DialogContent className="rounded-lg">
+            <DialogHeader>
+              <DialogTitle>{selectedItemData.Name}</DialogTitle>
+              <DialogDescription>
+                <p>
+                  <strong>Company:</strong> {selectedItemData.Company}
+                </p>
+                <p>
+                  <strong>Quantity:</strong> {selectedItemData.Quantity}
+                </p>
+                <p>
+                  <strong>Usage:</strong> {selectedItemData.Usage}
+                </p>
+                <p>
+                  <strong>Description:</strong> {selectedItemData.Description}
+                </p>
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter className="flex justify-end space-x-2">
+              <Button
+                variant="ghost"
+                onClick={() => router.push(`/resources/${selectedItemData.Id}`)}
+              >
+                Edit
+              </Button>
+              <Button
+                variant="destructive"
+                onClick={() => handleDeleteClick(selectedItemData.Id)}
+              >
+                Delete
+              </Button>
+            </DialogFooter>
+          </DialogContent>
           </div>
         </Dialog>
       )}

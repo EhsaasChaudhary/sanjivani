@@ -27,52 +27,44 @@ import { CheckCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Card } from "@/components/ui/card";
 
-
-// Schema for validating medicine form data
 const MedicineSchema = z.object({
-  name: z.string().min(1, "Name is required."),
-  description: z.string().min(1, "Description is required."),
-  quantity: z.coerce.number().gte(1, "Quantity must be greater than 0."),
-  price_per_unit: z.coerce.number().gte(1, "Quantity must be greater than 0."),
-  company: z.string().min(1, "Company is required."),
+  Name: z.string().min(1, "Name is required."),
+  Company: z.string().min(1, "Company is required."),
+  Usage: z.string().min(1, "Usage is required."),
+  Description: z.string().min(1, "Description is required."),
+  Quantity: z.coerce.number().gte(1, "Quantity must be greater than 0."),
+  imageUrl: z.string().optional(),
 });
 
-const MedicineForm = ({ params }: { params: { medicine_id: string } }) => {
+const MedicineForm = ({ params }: { params: { resourcesId: string } }) => {
   const router = useRouter();
-  const { medicine_id } = params;
-  const [loading, setLoading] = useState<boolean>(medicine_id !== "new");
+  const { resourcesId } = params;
+  const [loading, setLoading] = useState<boolean>(resourcesId !== "new");
   const [error, setError] = useState<string | null>(null);
   const [successDialogOpen, setSuccessDialogOpen] = useState<boolean>(false);
-
-  // Define the JWT token
-  const accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdHJpbmciLCJleHAiOjE3Mjc4NjIyMjR9.cZgrQRY9LI5dsqQcK9uineahbGYbUoN-o-urZp561Ec"; // Replace with your actual JWT token
 
   const form = useForm<z.infer<typeof MedicineSchema>>({
     resolver: zodResolver(MedicineSchema),
     defaultValues: {
-      name: "",
-      description: "",
-      quantity: 1, // Default quantity set to 1
-      price_per_unit: 1, // Default quantity set to 1
+      Name: "",
+      Company: "",
+      Usage: "",
+      Description: "",
+      Quantity: 1, // Default quantity set to 1
+      imageUrl: "",
     },
   });
 
   useEffect(() => {
-    if (medicine_id !== "new") {
+    if (resourcesId !== "new") {
       const fetchMedicineData = async () => {
         try {
           const response = await fetch(
-            `http://13.126.120.181:8000/medicines/${medicine_id}`,
-            {
-              headers: {
-                Authorization: `Bearer ${accessToken}`,
-              },
-            }
+            `https://64145d0d36020cecfda67863.mockapi.io/Medicines/${resourcesId}`
           );
-
           if (!response.ok) {
             throw new Error(
-              `Failed to fetch data for medicine with ID: ${medicine_id}`
+              `Failed to fetch data for medicine with ID: ${resourcesId}`
             );
           }
           const data = await response.json();
@@ -88,35 +80,35 @@ const MedicineForm = ({ params }: { params: { medicine_id: string } }) => {
     } else {
       setLoading(false);
     }
-  }, [medicine_id, form]);
+  }, [resourcesId, form]);
 
   const handleSubmit = async (data: z.infer<typeof MedicineSchema>) => {
     try {
       const requestOptions = {
-        method: medicine_id === "new" ? "POST" : "PUT",
+        method: resourcesId === "new" ? "POST" : "PUT",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify(data),
       };
 
       const url =
-        medicine_id === "new"
-          ? `http://13.126.120.181:8000/medicines`
-          : `http://13.126.120.181:8000/medicines/${medicine_id}`;
+        resourcesId === "new"
+          ? `https://64145d0d36020cecfda67863.mockapi.io/Medicines`
+          : `https://64145d0d36020cecfda67863.mockapi.io/Medicines/${resourcesId}`;
 
       const response = await fetch(url, requestOptions);
 
       if (!response.ok) {
         throw new Error(
-          medicine_id === "new"
+          resourcesId === "new"
             ? "Failed to create new medicine"
             : "Failed to update medicine"
         );
       }
 
       setSuccessDialogOpen(true);
+
       setTimeout(() => {
         setSuccessDialogOpen(false);
         router.push("/resources");
@@ -140,7 +132,7 @@ const MedicineForm = ({ params }: { params: { medicine_id: string } }) => {
           >
             <FormField
               control={form.control}
-              name="name"
+              name="Name"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Name</FormLabel>
@@ -151,10 +143,35 @@ const MedicineForm = ({ params }: { params: { medicine_id: string } }) => {
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
-              name="description"
+              name="Company"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Company</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Company Name" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="Usage"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Usage</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Usage Instructions" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="Description"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Description</FormLabel>
@@ -167,7 +184,7 @@ const MedicineForm = ({ params }: { params: { medicine_id: string } }) => {
             />
             <FormField
               control={form.control}
-              name="quantity"
+              name="Quantity"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Quantity</FormLabel>
@@ -178,22 +195,8 @@ const MedicineForm = ({ params }: { params: { medicine_id: string } }) => {
                 </FormItem>
               )}
             />
-
-            <FormField
-              control={form.control}
-              name="price_per_unit"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>price per unit</FormLabel>
-                  <FormControl>
-                    <Input type="number" placeholder="Quantity" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
             <Button type="submit">
-              {medicine_id === "new" ? "Create" : "Update"} Medicine
+              {resourcesId === "new" ? "Create" : "Update"} Medicine
             </Button>
           </form>
         </Form>
@@ -205,13 +208,13 @@ const MedicineForm = ({ params }: { params: { medicine_id: string } }) => {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <CheckCircle className="h-5 w-5 text-green-500" />
-              {medicine_id === "new"
+              {resourcesId === "new"
                 ? "Creation Successful"
                 : "Update Successful"}
             </DialogTitle>
             <DialogDescription>
               The item has been successfully{" "}
-              {medicine_id === "new" ? "added" : "updated"}.
+              {resourcesId === "new" ? "added" : "updated"}.
             </DialogDescription>
           </DialogHeader>
         </DialogContent>
