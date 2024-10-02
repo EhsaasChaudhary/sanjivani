@@ -45,7 +45,7 @@ const MedicineForm = ({ params }: { params: { resourcesId: string } }) => {
   const form = useForm<z.infer<typeof MedicineSchema>>({
     resolver: zodResolver(MedicineSchema),
     defaultValues: {
-      hospital_id: "",
+      // hospital_id: "",
       name: "",
       description: "",
       quantity: 1, // Default quantity set to 1
