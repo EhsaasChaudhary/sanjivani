@@ -74,6 +74,7 @@ export default function Datatable() {
         setFilteredData(data);
         // setLoading(false);
       } catch (err) {
+        console.log(err);
         // setError((err as Error).message);
         // setLoading(false);
       }
