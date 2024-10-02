@@ -91,6 +91,7 @@ const HospitalForm = ({ params }: { params: { hospitalsId: string } }) => {
         method: hospitalsId === "new" ? "POST" : "PUT",
         headers: {
           accept: "application/json",
+          "Content-Type": "application/json",
           Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdHJpbmciLCJleHAiOjE3Mjc4NzU5NDR9.Q-YcKxskj_04NplxNO7OYoHORWJHozPI_JCsBrn0pLg`,
         },
         body: JSON.stringify(data),
