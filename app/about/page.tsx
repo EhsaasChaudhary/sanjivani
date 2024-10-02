@@ -33,13 +33,36 @@ export default function About() {
             <div>
               <h3 className="font-semibold">Tech Stack</h3>
               <ul className="list-disc list-inside">
-                <li>Next.js</li>
-                <li>React</li>
-                <li>TypeScript</li>
-                <li>Python - FastAPI</li>
-                <li>Tailwind CSS</li>
-                <li>Shadcn UI</li>
-                <li>Aceternity UI</li>
+                <li>
+                  Backend: FastAPI (Python), running background jobs for
+                  resource allocation
+                </li>
+                <li>
+                  Frontend: Next.js (React-based framework) for the admin
+                  dashboard and visualization
+                </li>
+                <li>
+                  Database: PostgreSQL for storing hospital and resource data
+                </li>
+                <li>
+                  API Testing: Postman for collaborating and testing APIs,
+                  OpenAPI (Swagger UI)
+                </li>
+                <li>
+                  Reverse Proxy: Caddy, managing HTTPS and serving the app
+                </li>
+                <li>
+                  Distance Calculation: Geopy library for calculating distances
+                  between hospitals
+                </li>
+                <li>
+                  ORM: SQLModel, simplifying database queries and operations
+                </li>
+                <li>
+                  CI/CD: GitHub Actions for continuous integration and
+                  deployment
+                </li>
+                <li>Hosting: AWS EC2 for cloud infrastructure</li>
               </ul>
             </div>
             <div>
