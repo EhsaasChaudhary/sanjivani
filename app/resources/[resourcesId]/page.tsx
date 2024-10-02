@@ -47,10 +47,10 @@ const MedicineSchema = z.object({
   company: z.string().min(1, "Company is required."),
 });
 
-const MedicineForm = ({ params }: { params: { resourcesId: string } }) => {
+const MedicineForm = ({ params }: { params: { medicine_id: string } }) => {
   const router = useRouter();
-  const { resourcesId } = params;
-  const [loading, setLoading] = useState<boolean>(resourcesId !== "new");
+  const { medicine_id } = params;
+  const [loading, setLoading] = useState<boolean>(medicine_id !== "new");
   const [error, setError] = useState<string | null>(null);
   const [successDialogOpen, setSuccessDialogOpen] = useState<boolean>(false);
 
@@ -68,11 +68,11 @@ const MedicineForm = ({ params }: { params: { resourcesId: string } }) => {
   });
 
   useEffect(() => {
-    if (resourcesId !== "new") {
+    if (medicine_id !== "new") {
       const fetchMedicineData = async () => {
         try {
           const response = await fetch(
-            `http://13.126.120.181:8000/medicines/${resourcesId}`,
+            `http://13.126.120.181:8000/medicines/${medicine_id}`,
             {
               headers: {
                 Authorization: `Bearer ${accessToken}`,
@@ -82,7 +82,7 @@ const MedicineForm = ({ params }: { params: { resourcesId: string } }) => {
 
           if (!response.ok) {
             throw new Error(
-              `Failed to fetch data for medicine with ID: ${resourcesId}`
+              `Failed to fetch data for medicine with ID: ${medicine_id}`
             );
           }
           const data = await response.json();
@@ -98,12 +98,12 @@ const MedicineForm = ({ params }: { params: { resourcesId: string } }) => {
     } else {
       setLoading(false);
     }
-  }, [resourcesId, form]);
+  }, [medicine_id, form]);
 
   const handleSubmit = async (data: z.infer<typeof MedicineSchema>) => {
     try {
       const requestOptions = {
-        method: resourcesId === "new" ? "POST" : "PUT",
+        method: medicine_id === "new" ? "POST" : "PUT",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`,
@@ -112,15 +112,15 @@ const MedicineForm = ({ params }: { params: { resourcesId: string } }) => {
       };
 
       const url =
-        resourcesId === "new"
+        medicine_id === "new"
           ? `http://13.126.120.181:8000/medicines`
-          : `http://13.126.120.181:8000/medicines/${resourcesId}`;
+          : `http://13.126.120.181:8000/medicines/${medicine_id}`;
 
       const response = await fetch(url, requestOptions);
 
       if (!response.ok) {
         throw new Error(
-          resourcesId === "new"
+          medicine_id === "new"
             ? "Failed to create new medicine"
             : "Failed to update medicine"
         );
@@ -203,7 +203,7 @@ const MedicineForm = ({ params }: { params: { resourcesId: string } }) => {
               )}
             />
             <Button type="submit">
-              {resourcesId === "new" ? "Create" : "Update"} Medicine
+              {medicine_id === "new" ? "Create" : "Update"} Medicine
             </Button>
           </form>
         </Form>
@@ -215,13 +215,13 @@ const MedicineForm = ({ params }: { params: { resourcesId: string } }) => {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <CheckCircle className="h-5 w-5 text-green-500" />
-              {resourcesId === "new"
+              {medicine_id === "new"
                 ? "Creation Successful"
                 : "Update Successful"}
             </DialogTitle>
             <DialogDescription>
               The item has been successfully{" "}
-              {resourcesId === "new" ? "added" : "updated"}.
+              {medicine_id === "new" ? "added" : "updated"}.
             </DialogDescription>
           </DialogHeader>
         </DialogContent>
