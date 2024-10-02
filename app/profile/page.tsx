@@ -39,7 +39,7 @@ export default function HospitalProfilePage() {
   }
 
   return (
-    <div className="container mx-auto p-4 space-y-6">
+    <div className="container mx-auto mt-24 p-4 space-y-6">
       <header className="flex flex-col sm:flex-row justify-between items-center gap-4 pb-4 border-b">
         <div className="flex items-center gap-4">
           <Avatar className="w-24 h-24">
