@@ -34,7 +34,7 @@ function Navbar() {
   const textColor = pathname === "/" ? 'text-white' : 'text-black'; // White for home, black for others
 
   return (
-    <div className="fixed top-0 left-0 w-full bg-white/30 dark:bg-black/30 backdrop-blur-md backdrop-saturate-150 border border-transparent dark:border-white/[0.2] shadow-md flex justify-between items-center px-8 py-4 z-50">
+    <div className="fixed top-0 left-0 w-full bg-white/30 dark:bg-black/30 backdrop-saturate-150 border border-transparent dark:border-white/[0.2] shadow-md flex justify-between items-center px-8 py-4 z-50">
       {/* Left section: Logo */}
       <div className="flex items-center">
         <span className={`font-bold text-lg ${textColor}`}>Sanjivani Care</span>

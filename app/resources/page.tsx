@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+// import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { MoreHorizontal, AlertTriangle, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -36,15 +36,15 @@ import {
 } from "@/components/ui/dialog";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import React, { useEffect, useState } from "react";
+// import axios from "axios";
 
 interface Medicine {
-  Id: string;
+  id: string;
   Name: string;
-  Company: string;
-  Usage: string;
-  Description: string;
-  Quantity: number;
-  imageUrl: string;
+  description: string;
+  quantity: number;
+  price_per_unit: number;
+  hospital_id: number;
 }
 
 export default function Datatable() {
@@ -62,31 +62,41 @@ export default function Datatable() {
   const router = useRouter();
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchMed = async () => {
       try {
         const response = await fetch(
-          "https://64145d0d36020cecfda67863.mockapi.io/Medicines"
+          "https://healthcareinfra.soham901.me/medicines/",
+          {
+            method: "GET",
+            headers: {
+              accept: "application/json",
+              Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdHJpbmciLCJleHAiOjE3Mjc4NzU5NDR9.Q-YcKxskj_04NplxNO7OYoHORWJHozPI_JCsBrn0pLg`,
+            },
+          }
         );
-        if (!response.ok) {
-          throw new Error("Failed to fetch data");
+
+        if (response.ok) {
+          const meddata: Medicine[] = await response.json();
+          setMedicineData(meddata);
+          setLoading(false)
+        } else {
+          const errorData = await response.json();
+          setError(errorData);
+          console.error("Failed to fetch hospitals:", errorData);
         }
-        const data = await response.json();
-        setMedicineData(data);
-        setFilteredData(data); // Initialize filtered data
-        setLoading(false);
-      } catch (err) {
-        setError((err as Error).message);
-        setLoading(false);
+      } catch (error) {
+        console.error("Error:", error);
       }
     };
 
-    fetchData();
+    fetchMed();
   }, []);
+  
 
   // Handle the search functionality
   useEffect(() => {
     const filtered = medicineData.filter((item) =>
-      item.Name.toUpperCase().startsWith(searchInput.toUpperCase())
+      item.name.toLowerCase().startsWith(searchInput.toUpperCase())
     );
     setFilteredData(filtered);
   }, [searchInput, medicineData]);
@@ -115,7 +125,7 @@ export default function Datatable() {
 
       // Remove the deleted item from the state
       setMedicineData((prevData) =>
-        prevData.filter((item) => item.Id !== selectedItemId)
+        prevData.filter((item) => item.id !== selectedItemId)
       );
       setConfirmDialogOpen(false); // Close the confirmation dialog
       setSuccessDialogOpen(true); // Open the success dialog
@@ -220,10 +230,9 @@ export default function Datatable() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Image</TableHead>
+                    {/* <TableHead>Image</TableHead> */}
                     <TableHead>Name</TableHead>
-                    <TableHead>Company</TableHead>
-                    <TableHead>Usage</TableHead>
+                   
                     <TableHead>Quantity</TableHead>
                     <TableHead>Description</TableHead>
                     <TableHead>Actions</TableHead>
@@ -232,8 +241,8 @@ export default function Datatable() {
 
                 <TableBody>
                   {filteredData.map((item) => (
-                    <TableRow key={item.Id} onClick={() => handleRowClick(item)}>
-                      <TableCell>
+                    <TableRow key={item.id} onClick={() => handleRowClick(item)}>
+                      {/* <TableCell>
                         <Image
                           alt={item.Name}
                           className="aspect-square rounded-md"
@@ -241,12 +250,12 @@ export default function Datatable() {
                           src={item.imageUrl}
                           width={64}
                         />
-                      </TableCell>
+                      </TableCell> */}
                       <TableCell>{item.Name}</TableCell>
-                      <TableCell>{item.Company}</TableCell>
-                      <TableCell>{item.Usage}</TableCell>
-                      <TableCell>{item.Quantity}</TableCell>
-                      <TableCell>{item.Description}</TableCell>
+                      {/* <TableCell>{item.Company}</TableCell>
+                      <TableCell>{item.Usage}</TableCell> */}
+                      <TableCell>{item.quantity}</TableCell>
+                      <TableCell>{item.description}</TableCell>
                       <TableCell>
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
@@ -261,14 +270,14 @@ export default function Datatable() {
                             <DropdownMenuLabel>Actions</DropdownMenuLabel>
                             <DropdownMenuItem
                               onClick={() =>
-                                router.push(`/resources/${item.Id}`)
+                                router.push(`/resources/${item.id}`)
                               }
                             >
                               Edit
                             </DropdownMenuItem>
                             <DropdownMenuItem
                               className="text-red-600 flex items-center"
-                              onClick={() => handleDeleteClick(item.Id)}
+                              onClick={() => handleDeleteClick(item.id)}
                             >
                               <AlertTriangle className="mr-2 h-4 w-4" />
                               Delete
@@ -294,29 +303,23 @@ export default function Datatable() {
               <DialogTitle>{selectedItemData.Name}</DialogTitle>
               <DialogDescription>
                 <p>
-                  <strong>Company:</strong> {selectedItemData.Company}
+                  <strong>Quantity:</strong> {selectedItemData.quantity}
                 </p>
                 <p>
-                  <strong>Quantity:</strong> {selectedItemData.Quantity}
-                </p>
-                <p>
-                  <strong>Usage:</strong> {selectedItemData.Usage}
-                </p>
-                <p>
-                  <strong>Description:</strong> {selectedItemData.Description}
+                  <strong>Description:</strong> {selectedItemData.description}
                 </p>
               </DialogDescription>
             </DialogHeader>
             <DialogFooter className="flex justify-end space-x-2">
               <Button
                 variant="ghost"
-                onClick={() => router.push(`/resources/${selectedItemData.Id}`)}
+                onClick={() => router.push(`/resources/${selectedItemData.id}`)}
               >
                 Edit
               </Button>
               <Button
                 variant="destructive"
-                onClick={() => handleDeleteClick(selectedItemData.Id)}
+                onClick={() => handleDeleteClick(selectedItemData.id)}
               >
                 Delete
               </Button>

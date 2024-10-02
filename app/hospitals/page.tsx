@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+// import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { MoreHorizontal, AlertTriangle, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -38,13 +38,11 @@ import { Tabs, TabsContent } from "@/components/ui/tabs";
 import React, { useEffect, useState } from "react";
 
 interface Hospital {
-  Id: string;
-  Name: string;
-  Company: string;
-  Usage: string;
-  Description: string;
-  Quantity: number;
-  imageUrl: string;
+  id: string;
+  name: string;
+  address: string;
+  longitude: number;
+  latitude: number;
 }
 
 export default function Datatable() {
@@ -62,31 +60,42 @@ export default function Datatable() {
   const router = useRouter();
 
   useEffect(() => {
-    const fetchData = async () => {
+
+    const fetchHospitals = async () => {
       try {
         const response = await fetch(
-          "https://64145d0d36020cecfda67863.mockapi.io/Hospitals"
+          "https://healthcareinfra.soham901.me/hospitals/",
+          {
+            method: "GET",
+            headers: {
+              accept: "application/json",
+              Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdHJpbmciLCJleHAiOjE3Mjc4NzU5NDR9.Q-YcKxskj_04NplxNO7OYoHORWJHozPI_JCsBrn0pLg`,
+            },
+          }
         );
-        if (!response.ok) {
-          throw new Error("Failed to fetch data");
+
+        if (response.ok) {
+          const data: Hospital[] = await response.json();
+          setHospitalData(data);
+          setLoading(false);
+        } else {
+          const errorData = await response.json();
+          setError(errorData);
+          console.error("Failed to fetch hospitals:", errorData);
         }
-        const data = await response.json();
-        setHospitalData(data);
-        setFilteredData(data); // Initialize filtered data
-        setLoading(false);
-      } catch (err) {
-        setError((err as Error).message);
-        setLoading(false);
+      } catch (error) {
+        console.error("Error:", error);
       }
     };
 
-    fetchData();
+
+    fetchHospitals();
   }, []);
 
   // Handle the search functionality
   useEffect(() => {
     const filtered = HospitalData.filter((item) =>
-      item.Name.toUpperCase().startsWith(searchInput.toUpperCase())
+      item.name.toUpperCase().startsWith(searchInput.toUpperCase())
     );
     setFilteredData(filtered);
   }, [searchInput, HospitalData]);
@@ -115,7 +124,7 @@ export default function Datatable() {
 
       // Remove the deleted item from the state
       setHospitalData((prevData) =>
-        prevData.filter((item) => item.Id !== selectedItemId)
+        prevData.filter((item) => item.id !== selectedItemId)
       );
       setConfirmDialogOpen(false); // Close the confirmation dialog
       setSuccessDialogOpen(true); // Open the success dialog
@@ -165,7 +174,7 @@ export default function Datatable() {
                 <button
                   className="btn btn-outline btn-sm flex items-center justify-between rounded-l-md border border-input bg-muted/40 px-3 py-2 text-sm font-semibold text-foreground shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-muted-foreground"
                   type="button"
-                  onClick={() => router.push(`/resources/new`)}
+                  onClick={() => router.push(`/hospitals/new`)}
                 >
                   Add New Item
                   <svg
@@ -220,33 +229,23 @@ export default function Datatable() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Image</TableHead>
+                    {/* <TableHead>Image</TableHead> */}
                     <TableHead>Name</TableHead>
-                    <TableHead>Company</TableHead>
-                    <TableHead>Usage</TableHead>
-                    <TableHead>Quantity</TableHead>
-                    <TableHead>Description</TableHead>
-                    <TableHead>Actions</TableHead>
+                    {/* <TableHead>Company</TableHead>
+                    <TableHead>Usage</TableHead> */}
+                    <TableHead>Address</TableHead>
+                    <TableHead>latitude</TableHead>
+                    <TableHead>longitude</TableHead>
                   </TableRow>
                 </TableHeader>
 
                 <TableBody>
                   {filteredData.map((item) => (
-                    <TableRow key={item.Id} onClick={() => handleRowClick(item)}>
-                      <TableCell>
-                        <Image
-                          alt={item.Name}
-                          className="aspect-square rounded-md"
-                          height={64}
-                          src={item.imageUrl}
-                          width={64}
-                        />
-                      </TableCell>
-                      <TableCell>{item.Name}</TableCell>
-                      <TableCell>{item.Company}</TableCell>
-                      <TableCell>{item.Usage}</TableCell>
-                      <TableCell>{item.Quantity}</TableCell>
-                      <TableCell>{item.Description}</TableCell>
+                    <TableRow key={item.id} onClick={() => handleRowClick(item)}>
+                      <TableCell>{item.name}</TableCell>
+                      <TableCell>{item.address}</TableCell>
+                      <TableCell>{item.latitude}</TableCell>
+                      <TableCell>{item.longitude}</TableCell>
                       <TableCell>
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
@@ -261,14 +260,14 @@ export default function Datatable() {
                             <DropdownMenuLabel>Actions</DropdownMenuLabel>
                             <DropdownMenuItem
                               onClick={() =>
-                                router.push(`/resources/${item.Id}`)
+                                router.push(`/hospitals/${String(item.id)}`)
                               }
                             >
                               Edit
                             </DropdownMenuItem>
                             <DropdownMenuItem
                               className="text-red-600 flex items-center"
-                              onClick={() => handleDeleteClick(item.Id)}
+                              onClick={() => handleDeleteClick(item.id)}
                             >
                               <AlertTriangle className="mr-2 h-4 w-4" />
                               Delete
@@ -291,32 +290,30 @@ export default function Datatable() {
           <div className="flex flex-col gap-3">
           <DialogContent className="rounded-lg">
             <DialogHeader>
-              <DialogTitle>{selectedItemData.Name}</DialogTitle>
+              <DialogTitle>{selectedItemData.name}</DialogTitle>
               <DialogDescription>
                 <p>
-                  <strong>Company:</strong> {selectedItemData.Company}
+                  <strong>address:</strong> {selectedItemData.address}
                 </p>
                 <p>
-                  <strong>Quantity:</strong> {selectedItemData.Quantity}
+                  <strong>latitude:</strong> {selectedItemData.latitude}
                 </p>
                 <p>
-                  <strong>Usage:</strong> {selectedItemData.Usage}
+                  <strong>longitude:</strong> {selectedItemData.longitude}
                 </p>
-                <p>
-                  <strong>Description:</strong> {selectedItemData.Description}
-                </p>
+                
               </DialogDescription>
             </DialogHeader>
             <DialogFooter className="flex justify-end space-x-2">
               <Button
                 variant="ghost"
-                onClick={() => router.push(`/resources/${selectedItemData.Id}`)}
+                onClick={() => router.push(`/hospitals/${String(selectedItemData?.id)}`)}
               >
                 Edit
               </Button>
               <Button
                 variant="destructive"
-                onClick={() => handleDeleteClick(selectedItemData.Id)}
+                onClick={() => handleDeleteClick(selectedItemData.id)}
               >
                 Delete
               </Button>
