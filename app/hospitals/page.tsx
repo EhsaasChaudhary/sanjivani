@@ -53,9 +53,7 @@ export default function Datatable() {
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [successDialogOpen, setSuccessDialogOpen] = useState(false);
   const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
-  const [selectedItemData, setSelectedItemData] = useState<Hospital | null>(
-    null
-  ); // New state for selected item data
+  const [selectedItemData, setSelectedItemData] = useState<Hospital | null>(null); // New state for selected item data
   const [searchInput, setSearchInput] = useState<string>("");
   const [modalOpen, setModalOpen] = useState(false); // State for modal visibility
 
@@ -66,18 +64,27 @@ export default function Datatable() {
     const fetchHospitals = async () => {
       try {
         const response = await fetch(
-          "https://healthcareinfra.soham901.me/hospitals"
+          "https://healthcareinfra.soham901.me/hospitals/",
+          {
+            method: "GET",
+            headers: {
+              accept: "application/json",
+              Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdHJpbmciLCJleHAiOjE3Mjc4NzU5NDR9.Q-YcKxskj_04NplxNO7OYoHORWJHozPI_JCsBrn0pLg`,
+            },
+          }
         );
-        if (!response.ok) {
-          throw new Error("Failed to fetch data");
+
+        if (response.ok) {
+          const data: Hospital[] = await response.json();
+          setHospitalData(data);
+          setLoading(false);
+        } else {
+          const errorData = await response.json();
+          setError(errorData);
+          console.error("Failed to fetch hospitals:", errorData);
         }
-        const data = await response.json();
-        setHospitalData(data);
-        setFilteredData(data); // Initialize filtered data
-        setLoading(false);
-      } catch (err) {
-        setError((err as Error).message);
-        setLoading(false);
+      } catch (error) {
+        console.error("Error:", error);
       }
     };
 
@@ -108,7 +115,7 @@ export default function Datatable() {
 
     try {
       const response = await fetch(
-        `https://healthcareinfra.soham901.me/hospitals/${selectedItemId}`,
+        `https://64145d0d36020cecfda67863.mockapi.io/Hospitals/${selectedItemId}`,
         { method: "DELETE" }
       );
       if (!response.ok) {
@@ -234,25 +241,18 @@ export default function Datatable() {
 
                 <TableBody>
                   {filteredData.map((item) => (
-                    <TableRow key={item.Id} onClick={() => handleRowClick(item)}>
-                      <TableCell>
-                        <Image
-                          alt={item.Name}
-                          className="aspect-square rounded-md"
-                          height={64}
-                          src={item.imageUrl}
-                          width={64}
-                        />
-                      </TableCell>
-                      <TableCell>{item.Name}</TableCell>
-                      <TableCell>{item.Company}</TableCell>
-                      <TableCell>{item.Usage}</TableCell>
-                      <TableCell>{item.Quantity}</TableCell>
-                      <TableCell>{item.Description}</TableCell>
+                    <TableRow key={item.id} onClick={() => handleRowClick(item)}>
+                      <TableCell>{item.name}</TableCell>
+                      <TableCell>{item.address}</TableCell>
+                      <TableCell>{item.latitude}</TableCell>
+                      <TableCell>{item.longitude}</TableCell>
                       <TableCell>
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" className="h-8 w-8 p-0">
+                            <Button
+                              variant="ghost"
+                              className="h-8 w-8 p-0"
+                            >
                               <MoreHorizontal className="h-4 w-4" />
                             </Button>
                           </DropdownMenuTrigger>
@@ -290,32 +290,30 @@ export default function Datatable() {
           <div className="flex flex-col gap-3">
           <DialogContent className="rounded-lg">
             <DialogHeader>
-              <DialogTitle>{selectedItemData.Name}</DialogTitle>
+              <DialogTitle>{selectedItemData.name}</DialogTitle>
               <DialogDescription>
                 <p>
-                  <strong>Company:</strong> {selectedItemData.Company}
+                  <strong>address:</strong> {selectedItemData.address}
                 </p>
                 <p>
-                  <strong>Quantity:</strong> {selectedItemData.Quantity}
+                  <strong>latitude:</strong> {selectedItemData.latitude}
                 </p>
                 <p>
-                  <strong>Usage:</strong> {selectedItemData.Usage}
+                  <strong>longitude:</strong> {selectedItemData.longitude}
                 </p>
-                <p>
-                  <strong>Description:</strong> {selectedItemData.Description}
-                </p>
+                
               </DialogDescription>
             </DialogHeader>
             <DialogFooter className="flex justify-end space-x-2">
               <Button
                 variant="ghost"
-                onClick={() => router.push(`/resources/${selectedItemData.Id}`)}
+                onClick={() => router.push(`/hospitals/${String(selectedItemData?.id)}`)}
               >
                 Edit
               </Button>
               <Button
                 variant="destructive"
-                onClick={() => handleDeleteClick(selectedItemData.Id)}
+                onClick={() => handleDeleteClick(selectedItemData.id)}
               >
                 Delete
               </Button>
