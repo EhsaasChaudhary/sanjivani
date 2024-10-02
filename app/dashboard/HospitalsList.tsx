@@ -21,6 +21,10 @@ interface Hospital {
   name: string;
 }
 
+interface HospitalResponse {
+  data: Hospital[]; // Define this based on how your API responds
+}
+
 export default function HospitalsList({
   setCount,
 }: {
@@ -59,7 +63,7 @@ export default function HospitalsList({
     };
 
     fetchHospitals();
-  }, []);
+  }, [setCount]);
 
   const filteredHospitals = hospitals.filter((hospital) =>
     hospital.name.toLowerCase().startsWith(hospitalSearch.toLowerCase())
