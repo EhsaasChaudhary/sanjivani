@@ -47,6 +47,10 @@ interface Medicine {
   imageUrl: string;
 }
 
+const API_URL = "http://13.126.120.181:8000/medicines";
+const JWT_TOKEN =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdHJpbmciLCJleHAiOjE3Mjc4NTgxNDN9.vGEULRvuDtnr4in0CTZmIIZDrgk5mSyGWnHjxZk7W28";
+
 export default function Datatable() {
   const [medicineData, setMedicineData] = useState<Medicine[]>([]);
   const [filteredData, setFilteredData] = useState<Medicine[]>([]);
@@ -64,9 +68,11 @@ export default function Datatable() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(
-          "https://64145d0d36020cecfda67863.mockapi.io/Medicines"
-        );
+        const response = await fetch(API_URL, {
+          headers: {
+            Authorization: `Bearer ${JWT_TOKEN}`,
+          },
+        });
         if (!response.ok) {
           throw new Error("Failed to fetch data");
         }
@@ -105,10 +111,12 @@ export default function Datatable() {
     if (!selectedItemId) return;
 
     try {
-      const response = await fetch(
-        `https://64145d0d36020cecfda67863.mockapi.io/Medicines/${selectedItemId}`,
-        { method: "DELETE" }
-      );
+      const response = await fetch(`${API_URL}/${selectedItemId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${JWT_TOKEN}`,
+        },
+      });
       if (!response.ok) {
         throw new Error("Failed to delete the item");
       }
@@ -247,30 +255,21 @@ export default function Datatable() {
                       <TableCell>{item.Usage}</TableCell>
                       <TableCell>{item.Quantity}</TableCell>
                       <TableCell>{item.Description}</TableCell>
-                      <TableCell>
+                      <TableCell className="text-center">
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              className="h-8 w-8 p-0"
-                            >
+                            <Button variant="ghost" className="h-8 w-8 p-0">
+                              <span className="sr-only">Open menu</span>
                               <MoreHorizontal className="h-4 w-4" />
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
                             <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                            <DropdownMenuItem>Edit</DropdownMenuItem>
                             <DropdownMenuItem
-                              onClick={() =>
-                                router.push(`/resources/${item.Id}`)
-                              }
-                            >
-                              Edit
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              className="text-red-600 flex items-center"
+                              className="text-red-500"
                               onClick={() => handleDeleteClick(item.Id)}
                             >
-                              <AlertTriangle className="mr-2 h-4 w-4" />
                               Delete
                             </DropdownMenuItem>
                           </DropdownMenuContent>
@@ -285,59 +284,19 @@ export default function Datatable() {
         </TabsContent>
       </Tabs>
 
-      {/* Modal for displaying selected item details */}
-      {selectedItemData && (
-        <Dialog open={modalOpen} onOpenChange={setModalOpen}>
-          <div className="flex flex-col gap-3">
-          <DialogContent className="rounded-lg">
-            <DialogHeader>
-              <DialogTitle>{selectedItemData.Name}</DialogTitle>
-              <DialogDescription>
-                <p>
-                  <strong>Company:</strong> {selectedItemData.Company}
-                </p>
-                <p>
-                  <strong>Quantity:</strong> {selectedItemData.Quantity}
-                </p>
-                <p>
-                  <strong>Usage:</strong> {selectedItemData.Usage}
-                </p>
-                <p>
-                  <strong>Description:</strong> {selectedItemData.Description}
-                </p>
-              </DialogDescription>
-            </DialogHeader>
-            <DialogFooter className="flex justify-end space-x-2">
-              <Button
-                variant="ghost"
-                onClick={() => router.push(`/resources/${selectedItemData.Id}`)}
-              >
-                Edit
-              </Button>
-              <Button
-                variant="destructive"
-                onClick={() => handleDeleteClick(selectedItemData.Id)}
-              >
-                Delete
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-          </div>
-        </Dialog>
-      )}
-
-      {/* Confirm Deletion Dialog */}
+      {/* Confirmation Dialog */}
       <Dialog open={confirmDialogOpen} onOpenChange={setConfirmDialogOpen}>
-        <DialogContent className="rounded-lg">
+        <DialogContent>
           <DialogHeader>
-            <DialogTitle>Are you sure?</DialogTitle>
+            <AlertTriangle className="h-10 w-10 text-red-500" />
+            <DialogTitle>Are you sure you want to delete this item?</DialogTitle>
             <DialogDescription>
               This action cannot be undone. This will permanently delete the
-              item.
+              resource.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="ghost" onClick={() => setConfirmDialogOpen(false)}>
+            <Button variant="secondary" onClick={() => setConfirmDialogOpen(false)}>
               Cancel
             </Button>
             <Button variant="destructive" onClick={handleDeleteConfirm}>
@@ -349,9 +308,11 @@ export default function Datatable() {
 
       {/* Success Dialog */}
       <Dialog open={successDialogOpen} onOpenChange={setSuccessDialogOpen}>
-        <DialogContent className="rounded-lg flex items-center justify-center">
-          <CheckCircle className="text-green-600 w-6 h-6 mr-2" />
-          <span>Item deleted successfully</span>
+        <DialogContent>
+          <DialogHeader>
+            <CheckCircle className="h-10 w-10 text-green-500" />
+            <DialogTitle>Deleted Successfully</DialogTitle>
+          </DialogHeader>
         </DialogContent>
       </Dialog>
     </div>

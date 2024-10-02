@@ -43,6 +43,9 @@ const MedicineForm = ({ params }: { params: { resourcesId: string } }) => {
   const [error, setError] = useState<string | null>(null);
   const [successDialogOpen, setSuccessDialogOpen] = useState<boolean>(false);
 
+  // Define the JWT token
+  const accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdHJpbmciLCJleHAiOjE3Mjc4NTgxNDN9.vGEULRvuDtnr4in0CTZmIIZDrgk5mSyGWnHjxZk7W28";
+
   const form = useForm<z.infer<typeof MedicineSchema>>({
     resolver: zodResolver(MedicineSchema),
     defaultValues: {
@@ -60,7 +63,12 @@ const MedicineForm = ({ params }: { params: { resourcesId: string } }) => {
       const fetchMedicineData = async () => {
         try {
           const response = await fetch(
-            `https://64145d0d36020cecfda67863.mockapi.io/Medicines/${resourcesId}`
+            `http://13.126.120.181:8000/medicines/${resourcesId}`,
+            {
+              headers: {
+                Authorization: `Bearer ${accessToken}`, // Add JWT token here
+              },
+            }
           );
           if (!response.ok) {
             throw new Error(
@@ -88,14 +96,15 @@ const MedicineForm = ({ params }: { params: { resourcesId: string } }) => {
         method: resourcesId === "new" ? "POST" : "PUT",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`, // Add JWT token here
         },
         body: JSON.stringify(data),
       };
 
       const url =
         resourcesId === "new"
-          ? `https://64145d0d36020cecfda67863.mockapi.io/Medicines`
-          : `https://64145d0d36020cecfda67863.mockapi.io/Medicines/${resourcesId}`;
+          ? `http://13.126.120.181:8000/medicines`
+          : `http://13.126.120.181:8000/medicines/${resourcesId}`;
 
       const response = await fetch(url, requestOptions);
 
