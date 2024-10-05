@@ -26,9 +26,9 @@ export default function Component() {
           <p className="text-lg md:text-xl lg:text-2xl text-white">
             Discover <span className="font-bold">healthcare services</span> tailored just for you. Our platform offers <span className="font-bold">advanced management capabilities</span>.
           </p>
-          <a href="/appointments" className="mt-6 inline-block px-6 py-3 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600">
+          {/* <a href="/appointments" className="mt-6 inline-block px-6 py-3 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600">
             Make an Appointment
-          </a>
+          </a> */}
         </div>
       </div>
     </div>
