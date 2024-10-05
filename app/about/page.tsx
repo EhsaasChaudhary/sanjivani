@@ -94,8 +94,7 @@ export default function About() {
           <CardContent>
             <div className="space-y-2">
               <p>
-                Experienced developer with a passion for creating elegant and
-                efficient web solutions using full stack technologies and AWS.
+              Ambitious student and freelancer with a passion for building products. i utilize the power of Next.js, Django, DRF, MERN stack and much more. Always eager to learn new technologies, system design, cloud and inner working of magical stuff.
               </p>
               <p>University: Darshan University</p>
               <div className="flex space-x-2">
@@ -120,7 +119,7 @@ export default function About() {
         <Card>
           <CardHeader>
             <CardTitle>Ehsaas Chaudhary</CardTitle>
-            <CardDescription>Frontend Specialist</CardDescription>
+            <CardDescription>Frontend Developer</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-2">
