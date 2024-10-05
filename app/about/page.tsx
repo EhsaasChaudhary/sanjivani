@@ -146,6 +146,68 @@ export default function About() {
             </div>
           </CardContent>
         </Card>
+
+        {/* Developer 3 */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Om Dabhi</CardTitle>
+            <CardDescription>Fronted Developer</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              <p>
+                Experienced developer with a passion for creating elegant and user friendly User interface
+              </p>
+              <p>University: Darshan University</p>
+              <div className="flex space-x-2">
+                <Link
+                  href="https://github.com/om-dabhi"
+                  className="text-gray-600 hover:text-gray-900"
+                >
+                  <Github className="h-6 w-6" />
+                </Link>
+                <Link
+                  href="https://www.linkedin.com/in/om-dabhi/"
+                  className="text-gray-600 hover:text-gray-900"
+                >
+                  <Linkedin className="h-6 w-6" />
+                </Link>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+
+        {/* Developer 1 */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Soham Jobanputra</CardTitle>
+            <CardDescription>Backend Developer</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              <p>
+                Experienced developer with a passion for creating elegant and
+                efficient backend.
+              </p>
+              <p>University: Darshan University</p>
+              <div className="flex space-x-2">
+                <Link
+                  href="https://github.com/Soham7777777"
+                  className="text-gray-600 hover:text-gray-900"
+                >
+                  <Github className="h-6 w-6" />
+                </Link>
+                <Link
+                  href="https://www.linkedin.com/in/soham-jobanputra-3386a6239/"
+                  className="text-gray-600 hover:text-gray-900"
+                >
+                  <Linkedin className="h-6 w-6" />
+                </Link>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
