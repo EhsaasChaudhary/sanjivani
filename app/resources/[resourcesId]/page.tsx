@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/dialog";
 import { CheckCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { Card } from "@/components/ui/card";
+import { Card, CardDescription, CardTitle } from "@/components/ui/card";
 
 const MedicineSchema = z.object({
   hospital_id: z.string(),
@@ -123,6 +123,10 @@ const MedicineForm = ({ params }: { params: { resourcesId: string } }) => {
   return (
     <>
       <Card className="h-screen ml-3 mr-3 mb-3 mt-24">
+        <div className="m-6">
+          <CardTitle>Add Resources</CardTitle>
+          <CardDescription>Fill in resources information</CardDescription>
+        </div>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(handleSubmit)}
