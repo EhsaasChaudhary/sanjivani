@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from "react";
 import {
-  IconArrowLeft,
   IconBrandTabler,
   IconHospital,
   IconPill,
@@ -18,19 +17,14 @@ export default function SidebarDemo() {
       icon: <IconBrandTabler className="h-5 w-5" />,
     },
     {
-      label: "Add Resource",
+      label: "Resource",
       href: "/resources",
       icon: <IconPill className="h-5 w-5" />,
     },
     {
-      label: "Settings",
+      label: "Hospitals",
       href: "/hospitals",
       icon: <IconHospital className="h-5 w-5" />, // Changed to hospital icon
-    },
-    {
-      label: "Logout",
-      href: "/logout",
-      icon: <IconArrowLeft className="h-5 w-5" />,
     },
   ];
   

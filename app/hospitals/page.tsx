@@ -158,8 +158,8 @@ export default function Datatable() {
           <Card className="h-full">
             <CardHeader className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
               <div>
-                <CardTitle>Resources</CardTitle>
-                <CardDescription>Manage your Resources</CardDescription>
+                <CardTitle>Hospital</CardTitle>
+                <CardDescription>Manage your Hospital info</CardDescription>
               </div>
 
               {/* Searchbar and Add New Item Button */}
