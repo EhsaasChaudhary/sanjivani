@@ -29,6 +29,7 @@ import {
 } from "@/components/ui/dialog";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import React, { useEffect, useState } from "react";
+import HospitalTableSkeleton from "../components/loader";
 
 interface Hospital {
   id: string;
@@ -144,7 +145,7 @@ export default function Datatable() {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div><HospitalTableSkeleton/></div>;
   }
 
   if (error) {
