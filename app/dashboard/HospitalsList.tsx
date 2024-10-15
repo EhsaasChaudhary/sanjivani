@@ -14,6 +14,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Search } from "lucide-react";
+import Loadertab from "../components/loadertab";
 
 // Define the Hospital interface
 interface Hospital {
@@ -70,7 +71,7 @@ export default function HospitalsList({
   );
 
   if (isLoading) {
-    return <div className="">Loading......</div>;
+    return <div className=""><Loadertab/></div>;
   }
 
   return (

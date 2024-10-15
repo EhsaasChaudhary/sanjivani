@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/table";
 import { Search } from "lucide-react";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import Loadertab from "../components/loadertab";
 
 // Define the Medicine interface
 interface Medicine {
@@ -67,7 +68,7 @@ const MedicinesList = ({
   }, [setCount]); // Add setCount to the dependency array
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div><Loadertab/></div>;
   }
 
   if (error) {
