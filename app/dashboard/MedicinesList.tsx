@@ -16,8 +16,8 @@ import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 // Define the Medicine interface
 interface Medicine {
-  id: number;
-  name: string;
+  Id: number;
+  Name: string;
 }
 
 const MedicinesList = ({
@@ -31,20 +31,20 @@ const MedicinesList = ({
   const [error, setError] = useState<string | null>(null);
 
   const filteredMedicines = medicines.filter((medicine) =>
-    medicine.name.toLowerCase().startsWith(medicineSearch.toLowerCase())
+    medicine.Name.toLowerCase().startsWith(medicineSearch.toLowerCase())
   );
 
   useEffect(() => {
     const fetchMedicines = async () => {
       try {
         const response = await fetch(
-          "https://healthcareinfra.soham901.me/medicines/?skip=0&limit=100",
+          "https://64145d0d36020cecfda67863.mockapi.io/Medicines/",
           {
             method: "GET",
             headers: {
               Accept: "application/json",
-              Authorization:
-                "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdHJpbmciLCJleHAiOjE3Mjc4NzkwNjZ9.BgN-Rri0GmJ-j7Te9W7CKNsn56KLCO80aocuASHym30",
+              // Authorization:
+              //   "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdHJpbmciLCJleHAiOjE3Mjc4NzkwNjZ9.BgN-Rri0GmJ-j7Te9W7CKNsn56KLCO80aocuASHym30",
             },
           }
         );
@@ -99,8 +99,8 @@ const MedicinesList = ({
           </TableHeader>
           <TableBody>
             {filteredMedicines.map((medicine) => (
-              <TableRow key={medicine.id}>
-                <TableCell>{medicine.name}</TableCell>
+              <TableRow key={medicine.Id}>
+                <TableCell>{medicine.Name}</TableCell>
               </TableRow>
             ))}
           </TableBody>

@@ -17,8 +17,8 @@ import { Search } from "lucide-react";
 
 // Define the Hospital interface
 interface Hospital {
-  id: number;
-  name: string;
+  Id: number;
+  Name: string;
 }
 
 // interface HospitalResponse {
@@ -38,12 +38,12 @@ export default function HospitalsList({
     const fetchHospitals = async () => {
       try {
         const response = await fetch(
-          "https://healthcareinfra.soham901.me/hospitals/",
+          "https://670e5a983e71518616542879.mockapi.io/Hospitals/",
           {
             method: "GET",
             headers: {
               accept: "application/json",
-              Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdHJpbmciLCJleHAiOjE3Mjc4NzU5NDR9.Q-YcKxskj_04NplxNO7OYoHORWJHozPI_JCsBrn0pLg`,
+              // Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdHJpbmciLCJleHAiOjE3Mjc4NzU5NDR9.Q-YcKxskj_04NplxNO7OYoHORWJHozPI_JCsBrn0pLg`,
             },
           }
         );
@@ -66,7 +66,7 @@ export default function HospitalsList({
   }, [setCount]);
 
   const filteredHospitals = hospitals.filter((hospital) =>
-    hospital.name.toLowerCase().startsWith(hospitalSearch.toLowerCase())
+    hospital.Name.toLowerCase().startsWith(hospitalSearch.toLowerCase())
   );
 
   if (isLoading) {
@@ -98,8 +98,8 @@ export default function HospitalsList({
           </TableHeader>
           <TableBody>
             {filteredHospitals.map((hospital) => (
-              <TableRow key={hospital.id}>
-                <TableCell>{hospital.name}</TableCell>
+              <TableRow key={hospital.Id}>
+                <TableCell>{hospital.Name}</TableCell>
               </TableRow>
             ))}
           </TableBody>

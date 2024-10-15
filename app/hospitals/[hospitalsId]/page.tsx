@@ -25,12 +25,14 @@ import {
 import { CheckCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Card, CardDescription, CardTitle } from "@/components/ui/card";
+import { Textarea } from "@/components/ui/textarea";
 
 const HospitalSchema = z.object({
-  name: z.string().min(1, "Name is required."),
-  address: z.string().min(1, "Address is required."),
-  latitude: z.coerce.number().gte(1, "latitude must be greater than 0."),
-  longitude: z.coerce.number().gte(1, "Quantity must be greater than 0."),
+  Name: z.string().min(1, "Name is required."),
+  Branch: z.string().min(1, "Branch is required."),
+  Speciality: z.string().min(1, "Speciality is required."),
+  Description: z.string().min(1, "Description is required."),
+  Capacity: z.string().min(1, "Capacity is required."),
 });
 
 const HospitalForm = ({ params }: { params: { hospitalsId: string } }) => {
@@ -43,10 +45,11 @@ const HospitalForm = ({ params }: { params: { hospitalsId: string } }) => {
   const form = useForm<z.infer<typeof HospitalSchema>>({
     resolver: zodResolver(HospitalSchema),
     defaultValues: {
-      name: "",
-      address: "",
-      latitude: 0, // Default quantity set to 1
-      longitude: 0,
+      Name: "",
+      Branch: "",
+      Speciality: "",
+      Description: "",
+      Capacity: "",
     },
   });
 
@@ -56,12 +59,12 @@ const HospitalForm = ({ params }: { params: { hospitalsId: string } }) => {
         console.log(hospitalsId);
         try {
           const response = await fetch(
-            `https://healthcareinfra.soham901.me/hospitals/${hospitalsId}`,
+            `https://670e5a983e71518616542879.mockapi.io/Hospitals/${hospitalsId}`,
             {
               method: "GET",
               headers: {
                 accept: "application/json",
-                Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdHJpbmciLCJleHAiOjE3Mjc4NzU5NDR9.Q-YcKxskj_04NplxNO7OYoHORWJHozPI_JCsBrn0pLg`,
+                // Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdHJpbmciLCJleHAiOjE3Mjc4NzU5NDR9.Q-YcKxskj_04NplxNO7OYoHORWJHozPI_JCsBrn0pLg`,
               },
             }
           );
@@ -92,15 +95,15 @@ const HospitalForm = ({ params }: { params: { hospitalsId: string } }) => {
         headers: {
           accept: "application/json",
           "Content-Type": "application/json",
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdHJpbmciLCJleHAiOjE3Mjc4NzU5NDR9.Q-YcKxskj_04NplxNO7OYoHORWJHozPI_JCsBrn0pLg`,
+          // Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdHJpbmciLCJleHAiOjE3Mjc4NzU5NDR9.Q-YcKxskj_04NplxNO7OYoHORWJHozPI_JCsBrn0pLg`,
         },
         body: JSON.stringify(data),
       };
 
       const url =
         hospitalsId === "new"
-          ? `https://healthcareinfra.soham901.me/hospitals/`
-          : `https://64145d0d36020cecfda67863.mockapi.io/Hospitals/${hospitalsId}`;
+          ? `https://670e5a983e71518616542879.mockapi.io/Hospitals/`
+          : `https://670e5a983e71518616542879.mockapi.io/Hospitals/${hospitalsId}`;
 
       const response = await fetch(url, requestOptions);
 
@@ -141,7 +144,7 @@ const HospitalForm = ({ params }: { params: { hospitalsId: string } }) => {
           >
             <FormField
               control={form.control}
-              name="name"
+              name="Name"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Name</FormLabel>
@@ -152,45 +155,70 @@ const HospitalForm = ({ params }: { params: { hospitalsId: string } }) => {
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
-              name="address"
+              name="Branch"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Address</FormLabel>
+                  <FormLabel>Branch</FormLabel>
                   <FormControl>
-                    <Input placeholder="Address" {...field} />
+                    <Input placeholder="Branch Location" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
-              name="latitude"
+              name="Speciality"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Latitude</FormLabel>
+                  <FormLabel>Speciality</FormLabel>
                   <FormControl>
-                    <Input type="number" placeholder="Latitude" {...field} />
+                    <Input
+                      placeholder="Speciality of the Hospital"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
-              name="longitude"
+              name="Description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Longitude</FormLabel>
+                  <FormLabel>Description</FormLabel>
                   <FormControl>
-                    <Input type="number" placeholder="Longitude" {...field} />
+                    <Textarea placeholder="Hospital Description" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
+
+            <FormField
+              control={form.control}
+              name="Capacity"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Capacity</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      placeholder="Capacity (Beds)"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
             <Button type="submit">
               {hospitalsId === "new" ? "Create" : "Update"} Hospital
             </Button>

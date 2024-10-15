@@ -28,11 +28,11 @@ import { useRouter } from "next/navigation";
 import { Card, CardDescription, CardTitle } from "@/components/ui/card";
 
 const MedicineSchema = z.object({
-  hospital_id: z.string(),
-  name: z.string().min(1, "Name is required."),
-  description: z.string().min(1, "Description is required."),
-  quantity: z.coerce.number().gte(1, "Quantity must be greater than 0."),
-  price_per_unit: z.coerce.number().gte(1, "Quantity must be greater than 0."),
+  Name: z.string().min(1, "Name is required."),
+  Company: z.string().min(1, "Company is required."),
+  Usage: z.string().min(1, "Usage is required."),
+  Description: z.string().min(1, "Description is required."),
+  Quantity: z.coerce.number().gte(1, "Quantity must be greater than 0."),
 });
 
 const MedicineForm = ({ params }: { params: { resourcesId: string } }) => {
@@ -45,11 +45,11 @@ const MedicineForm = ({ params }: { params: { resourcesId: string } }) => {
   const form = useForm<z.infer<typeof MedicineSchema>>({
     resolver: zodResolver(MedicineSchema),
     defaultValues: {
-      hospital_id: "",
-      name: "",
-      description: "",
-      quantity: 1, // Default quantity set to 1
-      price_per_unit: 0,
+      Name: "",
+      Company: "",
+      Usage: "",
+      Description: "",
+      Quantity: 1, // Default quantity set to 1
     },
   });
 
@@ -58,7 +58,7 @@ const MedicineForm = ({ params }: { params: { resourcesId: string } }) => {
       const fetchMedicineData = async () => {
         try {
           const response = await fetch(
-            `https://healthcareinfra.soham901.me/medicines/${resourcesId}`
+            `https://64145d0d36020cecfda67863.mockapi.io/Medicines/${resourcesId}`
           );
           if (!response.ok) {
             throw new Error(
@@ -92,8 +92,8 @@ const MedicineForm = ({ params }: { params: { resourcesId: string } }) => {
 
       const url =
         resourcesId === "new"
-          ? `https://healthcareinfra.soham901.me/medicines/`
-          : `https://healthcareinfra.soham901.me/medicines/${resourcesId}`;
+          ? `https://64145d0d36020cecfda67863.mockapi.io/Medicines/`
+          : `https://64145d0d36020cecfda67863.mockapi.io/Medicines/${resourcesId}`;
 
       const response = await fetch(url, requestOptions);
 
@@ -132,22 +132,10 @@ const MedicineForm = ({ params }: { params: { resourcesId: string } }) => {
             onSubmit={form.handleSubmit(handleSubmit)}
             className="m-4 space-y-6"
           >
+
             <FormField
               control={form.control}
-              name="hospital_id"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Hospital ID</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Hospital ID" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="name"
+              name="Name"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Name</FormLabel>
@@ -158,14 +146,15 @@ const MedicineForm = ({ params }: { params: { resourcesId: string } }) => {
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
-              name="price_per_unit"
+              name="Company"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>price per unit</FormLabel>
+                  <FormLabel>Company</FormLabel>
                   <FormControl>
-                    <Input placeholder="enter prices" {...field} />
+                    <Input placeholder="Company Name" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -174,7 +163,21 @@ const MedicineForm = ({ params }: { params: { resourcesId: string } }) => {
 
             <FormField
               control={form.control}
-              name="description"
+              name="Usage"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Usage</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Usage Information" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="Description"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Description</FormLabel>
@@ -185,9 +188,10 @@ const MedicineForm = ({ params }: { params: { resourcesId: string } }) => {
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
-              name="quantity"
+              name="Quantity"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Quantity</FormLabel>
@@ -198,6 +202,7 @@ const MedicineForm = ({ params }: { params: { resourcesId: string } }) => {
                 </FormItem>
               )}
             />
+
             <Button type="submit">
               {resourcesId === "new" ? "Create" : "Update"} Medicine
             </Button>

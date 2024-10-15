@@ -40,12 +40,12 @@ import HospitalTableSkeleton from "../components/loader";
 // import axios from "axios";
 
 interface Medicine {
-  id: string;
-  name: string;
-  description: string;
-  quantity: number;
-  price_per_unit: number;
-  hospital_id: number;
+  Id: string;
+  Name: string;
+  Company: string;
+  Usage: string;
+  Description: string;
+  Quantity: number;
 }
 
 export default function Datatable() {
@@ -56,7 +56,9 @@ export default function Datatable() {
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [successDialogOpen, setSuccessDialogOpen] = useState(false);
   const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
-  const [selectedItemData, setSelectedItemData] = useState<Medicine | null>(null); // New state for selected item data
+  const [selectedItemData, setSelectedItemData] = useState<Medicine | null>(
+    null
+  ); // New state for selected item data
   const [searchInput, setSearchInput] = useState<string>("");
   const [modalOpen, setModalOpen] = useState(false); // State for modal visibility
 
@@ -66,12 +68,12 @@ export default function Datatable() {
     const fetchMed = async () => {
       try {
         const response = await fetch(
-          "https://healthcareinfra.soham901.me/medicines/",
+          "https://64145d0d36020cecfda67863.mockapi.io/Medicines/",
           {
             method: "GET",
             headers: {
               accept: "application/json",
-              Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdHJpbmciLCJleHAiOjE3Mjc4NzU5NDR9.Q-YcKxskj_04NplxNO7OYoHORWJHozPI_JCsBrn0pLg`,
+              // Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdHJpbmciLCJleHAiOjE3Mjc4NzU5NDR9.Q-YcKxskj_04NplxNO7OYoHORWJHozPI_JCsBrn0pLg`,
             },
           }
         );
@@ -79,7 +81,7 @@ export default function Datatable() {
         if (response.ok) {
           const meddata: Medicine[] = await response.json();
           setMedicineData(meddata);
-          setLoading(false)
+          setLoading(false);
         } else {
           const errorData = await response.json();
           setError(errorData);
@@ -92,12 +94,11 @@ export default function Datatable() {
 
     fetchMed();
   }, []);
-  
 
   // Handle the search functionality
   useEffect(() => {
     const filtered = medicineData.filter((item) =>
-      item.name.toLowerCase().startsWith(searchInput.toUpperCase())
+      item.Name.toLowerCase().startsWith(searchInput.toUpperCase())
     );
     setFilteredData(filtered);
   }, [searchInput, medicineData]);
@@ -117,12 +118,12 @@ export default function Datatable() {
 
     try {
       const response = await fetch(
-        `https://healthcareinfra.soham901.me/medicines/${selectedItemId}`,
+        `https://64145d0d36020cecfda67863.mockapi.io/Medicines/${selectedItemId}`,
         {
           method: "DELETE",
           headers: {
             accept: "application/json",
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdHJpbmciLCJleHAiOjE3Mjc4NzU5NDR9.Q-YcKxskj_04NplxNO7OYoHORWJHozPI_JCsBrn0pLg`,
+            // Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdHJpbmciLCJleHAiOjE3Mjc4NzU5NDR9.Q-YcKxskj_04NplxNO7OYoHORWJHozPI_JCsBrn0pLg`,
           },
         }
       );
@@ -132,7 +133,7 @@ export default function Datatable() {
 
       // Remove the deleted item from the state
       setMedicineData((prevData) =>
-        prevData.filter((item) => item.id !== selectedItemId)
+        prevData.filter((item) => item.Id !== selectedItemId)
       );
       setConfirmDialogOpen(false); // Close the confirmation dialog
       setSuccessDialogOpen(true); // Open the success dialog
@@ -159,7 +160,11 @@ export default function Datatable() {
   };
 
   if (loading) {
-    return <div><HospitalTableSkeleton/></div>;
+    return (
+      <div>
+        <HospitalTableSkeleton />
+      </div>
+    );
   }
 
   if (error) {
@@ -239,43 +244,58 @@ export default function Datatable() {
                   <TableRow>
                     {/* <TableHead>Image</TableHead> */}
                     <TableHead>Name</TableHead>
-                   
-                    <TableHead>Quantity</TableHead>
+                    <TableHead>Company</TableHead>
+                    <TableHead>Usage</TableHead>
                     <TableHead>Description</TableHead>
+                    <TableHead>Quantity</TableHead>
                     <TableHead>Actions</TableHead>
                   </TableRow>
                 </TableHeader>
 
                 <TableBody>
                   {filteredData.map((item) => (
-                    <TableRow key={item.id} onClick={() => handleRowClick(item)}>
-                      
-                      <TableCell>{item.name}</TableCell>
-                      
-                      <TableCell>{item.quantity}</TableCell>
-                      <TableCell>{item.description}</TableCell>
+                    <TableRow
+                      key={item.Id}
+                      onClick={() => handleRowClick(item)}
+                    >
+                      <TableCell>{item.Name}</TableCell>
+                      <TableCell>{item.Company}</TableCell>
+                      <TableCell>{item.Usage}</TableCell>
+                      <TableCell>{item.Description}</TableCell>
+                      <TableCell>{item.Quantity}</TableCell>
+
                       <TableCell>
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
                             <Button
                               variant="ghost"
                               className="h-8 w-8 p-0"
+                              onClick={(e) => e.stopPropagation()} // Prevent propagation
                             >
                               <MoreHorizontal className="h-4 w-4" />
                             </Button>
                           </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
+                          <DropdownMenuContent
+                            align="end"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            {" "}
+                            {/* Prevent propagation */}
                             <DropdownMenuLabel>Actions</DropdownMenuLabel>
                             <DropdownMenuItem
-                              onClick={() =>
-                                router.push(`/resources/${item.id}`)
-                              }
+                              onClick={(e) => {
+                                e.stopPropagation(); // Prevent row click event
+                                router.push(`/resources/${item.Id}`);
+                              }}
                             >
                               Edit
                             </DropdownMenuItem>
                             <DropdownMenuItem
                               className="text-red-600 flex items-center"
-                              onClick={() => handleDeleteClick(item.id)}
+                              onClick={(e) => {
+                                e.stopPropagation(); // Prevent row click event
+                                handleDeleteClick(item.Id);
+                              }}
                             >
                               <AlertTriangle className="mr-2 h-4 w-4" />
                               Delete
@@ -296,33 +316,35 @@ export default function Datatable() {
       {selectedItemData && (
         <Dialog open={modalOpen} onOpenChange={setModalOpen}>
           <div className="flex flex-col gap-3">
-          <DialogContent className="rounded-lg">
-            <DialogHeader>
-              <DialogTitle>{selectedItemData.name}</DialogTitle>
-              <DialogDescription>
-                <p>
-                  <strong>Quantity:</strong> {selectedItemData.quantity}
-                </p>
-                <p>
-                  <strong>Description:</strong> {selectedItemData.description}
-                </p>
-              </DialogDescription>
-            </DialogHeader>
-            <DialogFooter className="flex justify-end space-x-2">
-              <Button
-                variant="ghost"
-                onClick={() => router.push(`/resources/${selectedItemData.id}`)}
-              >
-                Edit
-              </Button>
-              <Button
-                variant="destructive"
-                onClick={() => handleDeleteClick(selectedItemData.id)}
-              >
-                Delete
-              </Button>
-            </DialogFooter>
-          </DialogContent>
+            <DialogContent className="rounded-lg">
+              <DialogHeader>
+                <DialogTitle>{selectedItemData.Name}</DialogTitle>
+                <DialogDescription>
+                  <p>
+                    <strong>Quantity:</strong> {selectedItemData.Quantity}
+                  </p>
+                  <p>
+                    <strong>Description:</strong> {selectedItemData.Description}
+                  </p>
+                </DialogDescription>
+              </DialogHeader>
+              <DialogFooter className="flex justify-end space-x-2">
+                <Button
+                  variant="ghost"
+                  onClick={() =>
+                    router.push(`/resources/${selectedItemData.Id}`)
+                  }
+                >
+                  Edit
+                </Button>
+                <Button
+                  variant="destructive"
+                  onClick={() => handleDeleteClick(selectedItemData.Id)}
+                >
+                  Delete
+                </Button>
+              </DialogFooter>
+            </DialogContent>
           </div>
         </Dialog>
       )}

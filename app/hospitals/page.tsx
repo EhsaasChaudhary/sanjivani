@@ -2,7 +2,7 @@
 
 // import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { CheckCircle } from "lucide-react";
+import { AlertTriangle, CheckCircle, MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -30,13 +30,21 @@ import {
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import React, { useEffect, useState } from "react";
 import HospitalTableSkeleton from "../components/loader";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface Hospital {
-  id: string;
-  name: string;
-  address: string;
-  longitude: number;
-  latitude: number;
+  Id: string;
+  Name: string;
+  Branch: string;
+  Speciality: string;
+  Description: string;
+  Capacity: string;
 }
 
 export default function Datatable() {
@@ -59,12 +67,12 @@ export default function Datatable() {
     const fetchHospitals = async () => {
       try {
         const response = await fetch(
-          "https://healthcareinfra.soham901.me/hospitals/",
+          "https://670e5a983e71518616542879.mockapi.io/Hospitals/",
           {
             method: "GET",
             headers: {
               accept: "application/json",
-              Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdHJpbmciLCJleHAiOjE3Mjc4NzU5NDR9.Q-YcKxskj_04NplxNO7OYoHORWJHozPI_JCsBrn0pLg`,
+              // Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdHJpbmciLCJleHAiOjE3Mjc4NzU5NDR9.Q-YcKxskj_04NplxNO7OYoHORWJHozPI_JCsBrn0pLg`,
             },
           }
         );
@@ -89,7 +97,7 @@ export default function Datatable() {
   // Handle the search functionality
   useEffect(() => {
     const filtered = HospitalData.filter((item) =>
-      item.name.toUpperCase().startsWith(searchInput.toUpperCase())
+      item.Name.toUpperCase().startsWith(searchInput.toUpperCase())
     );
     setFilteredData(filtered);
   }, [searchInput, HospitalData]);
@@ -109,7 +117,7 @@ export default function Datatable() {
 
     try {
       const response = await fetch(
-        `https://64145d0d36020cecfda67863.mockapi.io/Hospitals/${selectedItemId}`,
+        `https://670e5a983e71518616542879.mockapi.io/Hospitals/${selectedItemId}`,
         { method: "DELETE" }
       );
       if (!response.ok) {
@@ -118,7 +126,7 @@ export default function Datatable() {
 
       // Remove the deleted item from the state
       setHospitalData((prevData) =>
-        prevData.filter((item) => item.id !== selectedItemId)
+        prevData.filter((item) => item.Id !== selectedItemId)
       );
       setConfirmDialogOpen(false); // Close the confirmation dialog
       setSuccessDialogOpen(true); // Open the success dialog
@@ -145,7 +153,11 @@ export default function Datatable() {
   };
 
   if (loading) {
-    return <div><HospitalTableSkeleton/></div>;
+    return (
+      <div>
+        <HospitalTableSkeleton />
+      </div>
+    );
   }
 
   if (error) {
@@ -223,26 +235,65 @@ export default function Datatable() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    {/* <TableHead>Image</TableHead> */}
                     <TableHead>Name</TableHead>
-                    {/* <TableHead>Company</TableHead>
-                    <TableHead>Usage</TableHead> */}
-                    <TableHead>Address</TableHead>
-                    <TableHead>latitude</TableHead>
-                    <TableHead>longitude</TableHead>
+                    <TableHead>Branch</TableHead>
+                    <TableHead>Speciality</TableHead>
+                    <TableHead>Description</TableHead>
+                    <TableHead>Capacity</TableHead>
+                    <TableHead>Actions</TableHead>
                   </TableRow>
                 </TableHeader>
 
                 <TableBody>
                   {filteredData.map((item) => (
                     <TableRow
-                      key={item.id}
+                      key={item.Id}
                       onClick={() => handleRowClick(item)}
                     >
-                      <TableCell>{item.name}</TableCell>
-                      <TableCell>{item.address}</TableCell>
-                      <TableCell>{item.latitude}</TableCell>
-                      <TableCell>{item.longitude}</TableCell>
+                      <TableCell>{item.Name}</TableCell>
+                      <TableCell>{item.Branch}</TableCell>
+                      <TableCell>{item.Speciality}</TableCell>
+                      <TableCell>{item.Description}</TableCell>
+                      <TableCell>{item.Capacity}</TableCell>
+                      <TableCell>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button
+                              variant="ghost"
+                              className="h-8 w-8 p-0"
+                              onClick={(e) => e.stopPropagation()} // Prevent propagation
+                            >
+                              <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent
+                            align="end"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            {" "}
+                            {/* Prevent propagation */}
+                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                            <DropdownMenuItem
+                              onClick={(e) => {
+                                e.stopPropagation(); // Prevent row click event
+                                router.push(`/hospitals/${item.Id}`);
+                              }}
+                            >
+                              Edit
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              className="text-red-600 flex items-center"
+                              onClick={(e) => {
+                                e.stopPropagation(); // Prevent row click event
+                                handleDeleteClick(item.Id);
+                              }}
+                            >
+                              <AlertTriangle className="mr-2 h-4 w-4" />
+                              Delete
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -258,16 +309,16 @@ export default function Datatable() {
           <div className="flex flex-col gap-3">
             <DialogContent className="rounded-lg">
               <DialogHeader>
-                <DialogTitle>{selectedItemData.name}</DialogTitle>
+                <DialogTitle>{selectedItemData.Name}</DialogTitle>
                 <DialogDescription>
                   <p>
-                    <strong>address:</strong> {selectedItemData.address}
+                    <strong>Name:</strong> {selectedItemData.Name}
                   </p>
                   <p>
-                    <strong>latitude:</strong> {selectedItemData.latitude}
+                    <strong>Speciality:</strong> {selectedItemData.Speciality}
                   </p>
                   <p>
-                    <strong>longitude:</strong> {selectedItemData.longitude}
+                    <strong>Description:</strong> {selectedItemData.Description}
                   </p>
                 </DialogDescription>
               </DialogHeader>
@@ -275,14 +326,14 @@ export default function Datatable() {
                 <Button
                   variant="ghost"
                   onClick={() =>
-                    router.push(`/hospitals/${String(selectedItemData?.id)}`)
+                    router.push(`/hospitals/${String(selectedItemData?.Id)}`)
                   }
                 >
                   Edit
                 </Button>
                 <Button
                   variant="destructive"
-                  onClick={() => handleDeleteClick(selectedItemData.id)}
+                  onClick={() => handleDeleteClick(selectedItemData.Id)}
                 >
                   Delete
                 </Button>
