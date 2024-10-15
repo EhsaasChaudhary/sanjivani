@@ -1,15 +1,32 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Pill, Building2 } from "lucide-react";
 import MedicinesList from "./MedicinesList";
 import HospitalsList from "./HospitalsList";
+import Loaderdash from "../components/loaderdash";
 
 export default function Dashboard() {
   const [medicineCount, setMedicineCount] = useState<number>(0);
   const [hospitalCount, setHospitalCount] = useState<number>(0);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Effect to manage loading state
+  useEffect(() => {
+    // If both counts are set to zero, stop loading
+    if (medicineCount === 0 && hospitalCount === 0) {
+      setIsLoading(false);
+    } else {
+      // If there is data, we can also stop loading
+      setIsLoading(false);
+    }
+  }, [medicineCount, hospitalCount]);
+
+  if (isLoading) {
+    return <div className="mt-24"><Loaderdash /></div>;
+  }
 
   return (
     <div className="container mx-auto mt-24 p-4 space-y-6">
@@ -46,8 +63,7 @@ export default function Dashboard() {
 
       <div className="space-y-6">
         <MedicinesList setCount={setMedicineCount} />
-        <HospitalsList setCount={setHospitalCount} />{" "}
-        {/* Use the new HospitalsList component */}
+        <HospitalsList setCount={setHospitalCount} />
       </div>
     </div>
   );
